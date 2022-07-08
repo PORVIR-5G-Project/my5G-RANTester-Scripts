@@ -79,6 +79,7 @@ echo "Preparing metrics collector containers..."
 git clone https://github.com/lucas-schierholt/ColetorDeMetricas-DockerStats &> /dev/null
 
 cd ColetorDeMetricas-DockerStats/
+chmod -R 777 nodered_data/
 docker compose -f coleta.yml pull &> /dev/null
 cd $WORK_DIR
 
