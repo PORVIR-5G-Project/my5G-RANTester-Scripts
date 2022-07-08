@@ -9,9 +9,9 @@ apt -y install git ca-certificates curl gnupg lsb-release make build-essential &
 
 # Check and install Docker
 if docker compose version | grep "Docker Compose version v2" > /dev/null 2>&1; then
-    echo "Docker and Docker Compose OK."
+    echo "-> Docker and Docker Compose OK."
 else
-    echo "Docker and/or Docker Compose v2 NOT installed, installing..."
+    echo "-> Docker and/or Docker Compose v2 NOT installed, installing..."
     apt -y remove docker docker.io containerd runc &> /dev/null
 
     mkdir -p /etc/apt/keyrings &> /dev/null
@@ -27,9 +27,9 @@ fi
 VERSION_EXPECTED=5.4
 CURRENT_VERSION=$(uname -r | cut -c1-3)
 if (( $(echo "$CURRENT_VERSION == $VERSION_EXPECTED" |bc -l) )); then
-    echo "Kernel version $CURRENT_VERSION OK."
+    echo "-> Kernel version $CURRENT_VERSION OK."
 else
-    echo "You are NOT running the recommended kernel version. Please install a version 5.4.XX-generic."
+    echo "-> WARN You are NOT running the recommended kernel version. Please install a version 5.4.90-generic."
     read -p "Do you want to continue (NOT recommended)? (y/N) " yn
 
     case $yn in
@@ -42,9 +42,9 @@ fi
 # Check and install gtp5g Kernel module
 MODULE="gtp5g"
 if lsmod | grep "$MODULE" &> /dev/null ; then
-    echo "Module $MODULE installed!"
+    echo "-> Module $MODULE installed!"
 else
-    echo "Module $MODULE is not installed, installing..."
+    echo "-> Module $MODULE is not installed, installing..."
 
     git clone -b v0.4.0 https://github.com/free5gc/gtp5g.git &> /dev/null
     cd gtp5g
@@ -55,9 +55,9 @@ else
     rm -rf gtp5g
 
     if lsmod | grep "$MODULE" &> /dev/null ; then
-        echo "$MODULE installed successfully!"
+        echo "-> Module $MODULE installed successfully!"
     else
-        echo "ERROR during $MODULE installation!"
+        echo "-> ERROR during module $MODULE installation!"
         exit 1
     fi
 fi
