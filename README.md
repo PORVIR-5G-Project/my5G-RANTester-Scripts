@@ -15,3 +15,11 @@ Scripts to run my5G-RANTester
     sudo -s
     bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/run_all.sh)
     ```
+
+## How to stop containers and clear data
+
+1. Run the `stop_and_clear.sh` script:
+    ```bash
+    sudo -s
+    bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/stop_and_clear.sh)
+    ```
