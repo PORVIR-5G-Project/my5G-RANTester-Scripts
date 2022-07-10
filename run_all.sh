@@ -5,7 +5,7 @@ WORK_DIR=$(pwd)
 # Install dependencies
 echo "Checking and installing dependencies..."
 apt update &> /dev/null
-apt -y install git ca-certificates curl gnupg lsb-release make build-essential &> /dev/null
+apt -y install git ca-certificates curl gnupg pass gnupg2 lsb-release make build-essential &> /dev/null
 
 # Check and install Docker
 if docker compose version | grep "Docker Compose version v2" > /dev/null 2>&1; then
