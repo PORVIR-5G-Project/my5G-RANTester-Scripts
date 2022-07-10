@@ -30,7 +30,7 @@ if (( $(echo "$CURRENT_VERSION == $VERSION_EXPECTED" |bc -l) )); then
     echo "-> Kernel version $CURRENT_VERSION OK."
 else
     echo "-> WARN You are NOT running the recommended kernel version. Please install a version 5.4.90-generic."
-    read -p "Do you want to continue (NOT recommended)? (y/N) " yn
+    read -p "Do you want to continue (NOT recommended)? [y/N] " yn
 
     case $yn in
         [Yy][Ee][Ss] ) ;;
