@@ -7,12 +7,16 @@ Scripts to run my5G-RANTester
 2. Install `curl`:
     ```bash
     sudo apt update
+    ```
+    ```bash
     sudo apt -y install curl
     ```
 
 3. Run the `run_all.sh` script:
     ```bash
     sudo -s
+    ```
+    ```bash
     bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/run_all.sh)
     ```
 
@@ -21,5 +25,7 @@ Scripts to run my5G-RANTester
 1. Run the `stop_and_clear.sh` script:
     ```bash
     sudo -s
+    ```
+    ```bash
     bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/stop_and_clear.sh)
     ```
