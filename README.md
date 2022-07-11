@@ -21,7 +21,19 @@ Scripts to run my5G-RANTester
     ```
 
     ```bash
-    bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/run_all.sh)
+    bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/run_all.sh) -c
+    ```
+
+## How to capture analytics logs and export to .csv file
+
+1. Run the `capture_and_parse_logs.sh` script:
+
+    ```bash
+    sudo -s
+    ```
+
+    ```bash
+    bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/capture_and_parse_logs.sh) my5grantester_logs.csv
     ```
 
 ## How to stop containers and clear data
