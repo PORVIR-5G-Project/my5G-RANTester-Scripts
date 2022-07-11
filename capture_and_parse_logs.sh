@@ -13,7 +13,15 @@ OUTPUT_FILE=$1
 if ! which node >/dev/null 2>&1; then
     echo "NodeJS is not installed. Installing..."
 
-    apt update >/dev/null 2>&1
+    curl -s https://deb.nodesource.com/setup_16.x | sudo bash >/dev/null 2>&1
+    apt install -y nodejs >/dev/null 2>&1
+fi
+
+# Check if NodeJS version is v16.x
+if ! node --version | grep v16 >/dev/null 2>&1; then
+    echo "NodeJS is installed. Version is not correct. Updating..."
+
+    curl -s https://deb.nodesource.com/setup_16.x | sudo bash >/dev/null 2>&1
     apt install -y nodejs >/dev/null 2>&1
 fi
 
