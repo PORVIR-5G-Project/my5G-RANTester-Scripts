@@ -3,11 +3,28 @@
 # Get current directory
 WORK_DIR=$(pwd)
 
+# Method to show help menu
+show_help(){
+    echo ""
+    echo "my5G-RANTester startup script"
+    echo ""
+    echo "Use: $0 [OPTIONS]"
+    echo ""
+    echo "Options:"
+    echo "  -c      Clear previous executions before run."
+    echo "  -d      Enable debug mode. Show all logs."
+    echo "  -h      Show this message and exit."
+    echo ""
+}
+
 # Parse parameters
 DEBUG='false'
-while getopts ':d' 'OPTKEY'; do
+CLEAR='false'
+while getopts ':cdh' 'OPTKEY'; do
     case ${OPTKEY} in
+        c) CLEAR='true' ;;
         d) DEBUG='true' ;;
+        h) show_help; exit 0 ;;
     esac
 done
 
@@ -67,6 +84,12 @@ user_input(){
 
 #####################################
 #####################################
+
+# Clear previous executions before run.
+if $CLEAR; then
+    print "Cleaning environment from previous executions before run..."
+    bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/stop_and_clear.sh)
+fi
 
 # Check Kernel version first
 VERSION_EXPECTED=5.4
