@@ -6,7 +6,7 @@ WORK_DIR=$(pwd)
 METRICS_COLLECTOR_DIR="ColetorDeMetricas-DockerStats/"
 if [ -d "$METRICS_COLLECTOR_DIR" ]; then
     cd $METRICS_COLLECTOR_DIR/
-    docker compose -f coleta.yml down
+    docker compose -f coleta.yml down --rmi all -v --remove-orphans
 
     cd $WORK_DIR
 
@@ -20,7 +20,7 @@ fi
 TESTER_DIR="free5gc-my5G-RANTester-docker/"
 if [ -d "$TESTER_DIR" ]; then
     cd $TESTER_DIR
-    docker compose down
+    docker compose down --rmi all -v --remove-orphans
 
     cd $WORK_DIR
 
@@ -32,7 +32,7 @@ fi
 FREE5GC_CORE_DIR="free5gc-docker-v3.0.6/"
 if [ -d "$FREE5GC_CORE_DIR" ]; then
     cd $FREE5GC_CORE_DIR
-    docker compose down
+    docker compose down --rmi all -v --remove-orphans
 
     cd $WORK_DIR
 
