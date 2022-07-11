@@ -42,7 +42,10 @@ fi
 # Expose Docker API via TCP
 DOCKER_API_TCP="tcp://0.0.0.0:2375"
 if ! cat /lib/systemd/system/docker.service | grep "$DOCKER_API_TCP" &> /dev/null; then
+    echo "-> Exposing Docker API via TCP at $DOCKER_API_TCP..."
+
     sed -i "/^ExecStart=/ s|$| -H $DOCKER_API_TCP|" /lib/systemd/system/docker.service
+    
     systemctl daemon-reload
     service docker restart
 fi
