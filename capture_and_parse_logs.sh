@@ -1,5 +1,17 @@
 #!/bin/bash
 
+install_nodejs() {
+    echo "Installing NodeJS v16..."
+
+    # Remove previous NodeJS version
+    apt update >/dev/null 2>&1
+    apt remove -y nodejs >/dev/null 2>&1
+
+    # Install NodeJS v16.x
+    curl -s https://deb.nodesource.com/setup_16.x | sudo bash >/dev/null 2>&1
+    apt install -y nodejs >/dev/null 2>&1
+}
+
 # Check iif filename is provided
 if [ $# -eq 0 ]; then
     echo -e "\n Use: $0 /path/to/outputfile.csv \n"
@@ -11,18 +23,20 @@ OUTPUT_FILE=$1
 
 # Check if Nodejs is installed
 if ! which node >/dev/null 2>&1; then
-    echo "NodeJS is not installed. Installing..."
-
-    curl -s https://deb.nodesource.com/setup_16.x | sudo bash >/dev/null 2>&1
-    apt install -y nodejs >/dev/null 2>&1
+    echo "NodeJS is not installed."
+    install_nodejs
 fi
 
 # Check if NodeJS version is v16.x
 if ! node --version | grep v16 >/dev/null 2>&1; then
-    echo "NodeJS is installed. Version is not correct. Updating..."
+    echo "NodeJS is installed. Version is not correct."
+    read -p "Do you want to install NodeJS v16.x (recommended)? [Y/n] " USER_INPUT
 
-    curl -s https://deb.nodesource.com/setup_16.x | sudo bash >/dev/null 2>&1
-    apt install -y nodejs >/dev/null 2>&1
+    case $USER_INPUT in
+        [Nn][Oo] ) ;;
+        [Nn] ) ;;
+        * ) install_nodejs ;;
+    esac
 fi
 
 # Capture logs
