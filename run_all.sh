@@ -2,6 +2,22 @@
 
 WORK_DIR=$(pwd)
 
+# Check Kernel version first
+VERSION_EXPECTED=5.4
+CURRENT_VERSION=$(uname -r | cut -c1-3)
+if (( $(echo "$CURRENT_VERSION == $VERSION_EXPECTED" |bc -l) )); then
+    echo "-> Kernel version $CURRENT_VERSION OK."
+else
+    echo "-> WARN You are NOT running the recommended kernel version. Please install a version 5.4.90-generic."
+    read -p "Do you want to continue (NOT recommended)? [y/N] " yn
+
+    case $yn in
+        [Yy][Ee][Ss] ) ;;
+        [Yy] ) ;;
+        * ) echo "Exiting..."; exit 1;;
+    esac
+fi
+
 # Install dependencies
 echo "Checking and installing dependencies..."
 apt update &> /dev/null
@@ -23,20 +39,12 @@ else
     apt -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin &> /dev/null
 fi
 
-# Check Kernel version first
-VERSION_EXPECTED=5.4
-CURRENT_VERSION=$(uname -r | cut -c1-3)
-if (( $(echo "$CURRENT_VERSION == $VERSION_EXPECTED" |bc -l) )); then
-    echo "-> Kernel version $CURRENT_VERSION OK."
-else
-    echo "-> WARN You are NOT running the recommended kernel version. Please install a version 5.4.90-generic."
-    read -p "Do you want to continue (NOT recommended)? [y/N] " yn
-
-    case $yn in
-        [Yy][Ee][Ss] ) ;;
-        [Yy] ) ;;
-        * ) echo "Exiting..."; exit 1;;
-    esac
+# Expose Docker API via TCP
+DOCKER_API_TCP="tcp://0.0.0.0:2375"
+if ! cat /lib/systemd/system/docker.service | grep "$DOCKER_API_TCP" &> /dev/null; then
+    sed -i "/^ExecStart=/ s|$| -H $DOCKER_API_TCP|" /lib/systemd/system/docker.service
+    systemctl daemon-reload
+    service docker restart
 fi
 
 # Check and install gtp5g Kernel module
