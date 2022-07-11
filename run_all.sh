@@ -14,17 +14,20 @@ show_help(){
     echo "  -c      Clear previous executions before run."
     echo "  -d      Enable debug mode. Show all logs."
     echo "  -h      Show this message and exit."
+    echo "  -s      Stop experiment execution and clear environment."
     echo ""
 }
 
 # Parse parameters
 DEBUG='false'
 CLEAR='false'
-while getopts ':cdh' 'OPTKEY'; do
+STOP_CLEAR='false'
+while getopts ':cdhs' 'OPTKEY'; do
     case ${OPTKEY} in
         c) CLEAR='true' ;;
         d) DEBUG='true' ;;
         h) show_help; exit 0 ;;
+        s) STOP_CLEAR='true' ;;
     esac
 done
 
@@ -86,9 +89,13 @@ user_input(){
 #####################################
 
 # Clear previous executions before run.
-if $CLEAR; then
+if $CLEAR || $STOP_CLEAR; then
     print "Cleaning environment from previous executions before run..."
     bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/stop_and_clear.sh)
+
+    if $STOP_CLEAR; then
+        exit 0;
+    fi
 fi
 
 # Check Kernel version first
