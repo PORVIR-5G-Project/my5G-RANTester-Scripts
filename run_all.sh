@@ -1,113 +1,206 @@
 #!/bin/bash
 
+# Get current directory
 WORK_DIR=$(pwd)
+
+# Parse parameters
+DEBUG='false'
+while getopts ':d' 'OPTKEY'; do
+    case ${OPTKEY} in
+        d) DEBUG='true' ;;
+    esac
+done
+
+# Enable Debug mode
+if ! $DEBUG; then
+    exec >/dev/null 2>&1
+fi
+
+#####################################
+########### PRINT METHODS ###########
+#####################################
+
+# Print method to override "exec >/dev/null 2>&1"
+print(){
+    local COLOR="`tput setaf 4`" # Blue
+    local DEFAULT="`tput sgr0`"
+
+    if $DEBUG; then
+        echo "${COLOR}$@${DEFAULT}"
+    else
+        exec >/dev/tty 2>&1
+        echo "${COLOR}$@${DEFAULT}"
+        exec >/dev/null 2>&1
+    fi
+}
+
+# Print OK method to override "exec >/dev/null 2>&1"
+print_ok(){
+    local COLOR="`tput setaf 2`" # Green
+    local DEFAULT="`tput sgr0`"
+
+    if $DEBUG; then
+        echo "${COLOR}$@${DEFAULT}"
+    else
+        exec >/dev/tty 2>&1
+        echo "${COLOR}$@${DEFAULT}"
+        exec >/dev/null 2>&1
+    fi
+}
+
+# Print error method to override "exec >/dev/null 2>&1"
+print_warn(){
+    local COLOR="`tput setaf 3`" # Yellow
+    local DEFAULT="`tput sgr0`"
+
+    if $DEBUG; then
+        echo "${COLOR}$@${DEFAULT}"
+    else
+        exec >/dev/tty 2>&1
+        echo "${COLOR}$@${DEFAULT}"
+        exec >/dev/null 2>&1
+    fi
+}
+
+# Print error method to override "exec >/dev/null 2>&1"
+print_err(){
+    local COLOR="`tput setaf 1`" # Red
+    local DEFAULT="`tput sgr0`"
+
+    if $DEBUG; then
+        echo "${COLOR}$@${DEFAULT}"
+    else
+        exec >/dev/tty 2>&1
+        echo "${COLOR}$@${DEFAULT}"
+        exec >/dev/null 2>&1
+    fi
+}
+
+# Read user inputs
+USER_INPUT=""
+user_input(){
+    local COLOR="`tput setaf 3`" # Yellow
+    local DEFAULT="`tput sgr0`"
+
+    if $DEBUG; then
+        read -p "${COLOR}$@${DEFAULT}" USER_INPUT
+    else
+        exec >/dev/tty 2>&1
+        read -p "${COLOR}$@${DEFAULT}" USER_INPUT
+        exec >/dev/null 2>&1
+    fi
+}
+
+#####################################
+#####################################
 
 # Check Kernel version first
 VERSION_EXPECTED=5.4
 CURRENT_VERSION=$(uname -r | cut -c1-3)
+print "Checking Kernel version..."
 if (( $(echo "$CURRENT_VERSION == $VERSION_EXPECTED" |bc -l) )); then
-    echo "-> Kernel version $CURRENT_VERSION OK."
+    print_ok "->Kernel version $CURRENT_VERSION OK."
 else
-    echo "-> WARN You are NOT running the recommended kernel version. Please install a version 5.4.90-generic."
-    read -p "Do you want to continue (NOT recommended)? [y/N] " yn
+    print_err "-> You are NOT running the recommended kernel version. Please install version 5.4.90-generic."
+    user_input "Do you want to continue (NOT recommended)? [y/N] "
 
-    case $yn in
+    case $USER_INPUT in
         [Yy][Ee][Ss] ) ;;
         [Yy] ) ;;
-        * ) echo "Exiting..."; exit 1;;
+        * ) print "Exiting..."; exit 1;;
     esac
 fi
 
 # Install dependencies
-echo "Checking and installing dependencies..."
-apt update &> /dev/null
-apt -y install git ca-certificates curl gnupg pass gnupg2 lsb-release make build-essential &> /dev/null
+print "Checking and installing dependencies..."
+apt update 
+apt -y install git ca-certificates curl gnupg pass gnupg2 lsb-release make build-essential
 
 # Check and install Docker
-if docker compose version | grep "Docker Compose version v2" > /dev/null 2>&1; then
-    echo "-> Docker and Docker Compose OK."
+if docker compose version | grep "Docker Compose version v2" 2>&1 > /dev/null; then
+    print_ok "-> Docker and Docker Compose OK."
 else
-    echo "-> Docker and/or Docker Compose v2 NOT installed, installing..."
-    apt -y remove docker docker.io containerd runc &> /dev/null
+    print_warn "-> Docker and/or Docker Compose v2 NOT installed, installing..."
+    apt -y remove docker docker.io containerd runc
 
-    mkdir -p /etc/apt/keyrings &> /dev/null
+    mkdir -p /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg  --batch --yes --dearmor -o /etc/apt/keyrings/docker.gpg
 
     echo  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-    apt update &> /dev/null
-    apt -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin &> /dev/null
+    apt update
+    apt -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 fi
 
 # Expose Docker API via TCP
 DOCKER_API_TCP="tcp://0.0.0.0:2375"
-if ! cat /lib/systemd/system/docker.service | grep "$DOCKER_API_TCP" &> /dev/null; then
-    echo "-> Exposing Docker API via TCP at $DOCKER_API_TCP..."
+if ! cat /lib/systemd/system/docker.service | grep "$DOCKER_API_TCP" 2>&1 > /dev/null; then
+    print "-> Exposing Docker API via TCP at $DOCKER_API_TCP..."
 
     sed -i "/^ExecStart=/ s|$| -H $DOCKER_API_TCP|" /lib/systemd/system/docker.service
-    
+
     systemctl daemon-reload
     service docker restart
 fi
 
 # Check and install gtp5g Kernel module
 MODULE="gtp5g"
-if lsmod | grep "$MODULE" &> /dev/null ; then
-    echo "-> Module $MODULE installed!"
+if lsmod | grep "$MODULE" 2>&1 > /dev/null ; then
+    print_ok "-> Module $MODULE installed!"
 else
-    echo "-> Module $MODULE is not installed, installing..."
+    print_warn "-> Module $MODULE is not installed, installing..."
 
-    git clone -b v0.4.0 https://github.com/free5gc/gtp5g.git &> /dev/null
+    git clone -b v0.4.0 https://github.com/free5gc/gtp5g.git
     cd gtp5g
-    make > /dev/null
-    make install > /dev/null
+    make
+    make install
 
     cd $WORK_DIR
     rm -rf gtp5g
 
-    if lsmod | grep "$MODULE" &> /dev/null ; then
-        echo "-> Module $MODULE installed successfully!"
+    if lsmod | grep "$MODULE" 2>&1 > /dev/null ; then
+        print_ok "-> Module $MODULE installed successfully!"
     else
-        echo "-> ERROR during module $MODULE installation!"
+        print_err "-> ERROR during module $MODULE installation!"
         exit 1
     fi
 fi
 
 # Create Free5G containers
-echo "Creating Free5G containers, it can take a while..."
+print "Creating Free5G containers, it can take a while..."
 
-git clone https://github.com/my5G/free5gc-docker-v3.0.6.git &> /dev/null
+git clone https://github.com/my5G/free5gc-docker-v3.0.6.git
 cd free5gc-docker-v3.0.6/
-make base &> /dev/null
-docker compose build &> /dev/null
+make base
+docker compose build
 
-docker compose up -d &> /dev/null
+docker compose up -d
 cd $WORK_DIR
 
 # Pull images for the metrics collector
-echo "Preparing metrics collector containers..."
+print "Preparing metrics collector containers..."
 
-git clone https://github.com/lucas-schierholt/ColetorDeMetricas-DockerStats &> /dev/null
+git clone https://github.com/lucas-schierholt/ColetorDeMetricas-DockerStats
 
 cd ColetorDeMetricas-DockerStats/
 chmod -R 777 nodered_data/
-docker compose -f coleta.yml pull &> /dev/null
+docker compose -f coleta.yml pull
 cd $WORK_DIR
 
 # Create my5G-RANTester container
-echo "Creating my5G-RANTester container, it can take a while..."
-git clone https://github.com/gabriel-lando/free5gc-my5G-RANTester-docker &> /dev/null
+print "Creating my5G-RANTester container, it can take a while..."
+git clone https://github.com/gabriel-lando/free5gc-my5G-RANTester-docker
 
 cd free5gc-my5G-RANTester-docker/
-git submodule init &> /dev/null
-git submodule update --remote &> /dev/null
+git submodule init
+git submodule update --remote
 
-docker compose up --build -d &> /dev/null
+docker compose up --build -d
 cd $WORK_DIR
 
 # Start metrics collector
-echo "Starting metrics collector containers..."
+print "Starting metrics collector containers..."
 
 cd ColetorDeMetricas-DockerStats/
-docker compose -f coleta.yml up -d &> /dev/null
+docker compose -f coleta.yml up -d
 cd $WORK_DIR
