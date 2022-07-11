@@ -12,7 +12,9 @@ OUTPUT_FILE=$1
 # Check if Nodejs is installed
 if ! which node >/dev/null 2>&1; then
     echo "NodeJS is not installed. Installing..."
-    apt update && apt install -y nodejs >/dev/null 2>&1
+
+    apt update >/dev/null 2>&1
+    apt install -y nodejs >/dev/null 2>&1
 fi
 
 # Capture logs
