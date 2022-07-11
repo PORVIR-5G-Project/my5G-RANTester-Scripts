@@ -21,10 +21,9 @@ fi
 #####################################
 
 # Print method to override "exec >/dev/null 2>&1"
+COLOR="`tput setaf 4`" # Default color: Blue
+DEFAULT="`tput sgr0`"
 print(){
-    local COLOR="`tput setaf 4`" # Blue
-    local DEFAULT="`tput sgr0`"
-
     if $DEBUG; then
         echo "${COLOR}$@${DEFAULT}"
     else
@@ -34,53 +33,28 @@ print(){
     fi
 }
 
-# Print OK method to override "exec >/dev/null 2>&1"
+# Print with GREEN color
 print_ok(){
     local COLOR="`tput setaf 2`" # Green
-    local DEFAULT="`tput sgr0`"
-
-    if $DEBUG; then
-        echo "${COLOR}$@${DEFAULT}"
-    else
-        exec >/dev/tty 2>&1
-        echo "${COLOR}$@${DEFAULT}"
-        exec >/dev/null 2>&1
-    fi
+    print $@
 }
 
-# Print error method to override "exec >/dev/null 2>&1"
+# Print with YELLOW color
 print_warn(){
     local COLOR="`tput setaf 3`" # Yellow
-    local DEFAULT="`tput sgr0`"
-
-    if $DEBUG; then
-        echo "${COLOR}$@${DEFAULT}"
-    else
-        exec >/dev/tty 2>&1
-        echo "${COLOR}$@${DEFAULT}"
-        exec >/dev/null 2>&1
-    fi
+    print $@
 }
 
-# Print error method to override "exec >/dev/null 2>&1"
+# Print with RED color
 print_err(){
     local COLOR="`tput setaf 1`" # Red
-    local DEFAULT="`tput sgr0`"
-
-    if $DEBUG; then
-        echo "${COLOR}$@${DEFAULT}"
-    else
-        exec >/dev/tty 2>&1
-        echo "${COLOR}$@${DEFAULT}"
-        exec >/dev/null 2>&1
-    fi
+    print $@
 }
 
 # Read user inputs
 USER_INPUT=""
 user_input(){
     local COLOR="`tput setaf 3`" # Yellow
-    local DEFAULT="`tput sgr0`"
 
     if $DEBUG; then
         read -p "${COLOR}$@${DEFAULT}" USER_INPUT
