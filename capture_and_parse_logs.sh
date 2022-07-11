@@ -40,12 +40,14 @@ if ! node --version | grep v16 >/dev/null 2>&1; then
 fi
 
 # Capture logs
+echo "Capturing Docker container logs..."
 docker logs my5grantester > /tmp/my5G-RANTester.log
 
 # Download script to parse logs
 wget https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/parse_tester_logs.js -O /tmp/parse_tester_logs.js >/dev/null 2>&1
 
 # Parse logs
+echo "Parsing logs..."
 node /tmp/parse_tester_logs.js /tmp/my5G-RANTester.log $OUTPUT_FILE
 
 # Remove temporary files
