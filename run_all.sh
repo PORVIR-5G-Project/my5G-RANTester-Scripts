@@ -170,8 +170,8 @@ else
     fi
 fi
 
-# Create Free5G containers
-print "Creating Free5G containers, it can take a while..."
+# Create free5GC containers
+print "Creating free5GC containers, it can take a while..."
 
 git clone https://github.com/my5G/free5gc-docker-v3.0.6.git
 cd free5gc-docker-v3.0.6/
