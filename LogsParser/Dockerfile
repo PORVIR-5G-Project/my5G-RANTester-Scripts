@@ -12,7 +12,7 @@ ENV INPUT="my5grantester_logs.txt"
 ENV OUTPUT="my5grantester_logs.csv"
 
 # Run JS file with Node
-CMD [ "node", "parse_tester_logs.js $INPUT $OUTPUT"]
+CMD [ "node", "parse_tester_logs.js", $INPUT, $OUTPUT]
 
 # How to run:
 # docker build . -t lando/my5grantester-logs-parser
