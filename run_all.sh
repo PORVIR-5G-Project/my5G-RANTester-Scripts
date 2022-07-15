@@ -41,7 +41,7 @@ fi
 #####################################
 
 # Print method to override "exec >/dev/null 2>&1"
-COLOR="`tput setaf 4`" # Default color: Blue
+COLOR="`tput setaf 6`" # Default color: Cyan
 DEFAULT="`tput sgr0`"
 print(){
     if $DEBUG; then
