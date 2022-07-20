@@ -39,3 +39,15 @@ if [ -d "$FREE5GC_CORE_DIR" ]; then
     # Remove git directory
     rm -rf $FREE5GC_CORE_DIR
 fi
+
+# Clear free5GC database filler data
+DATABASE_FILLER_DIR="my5G-RANTester-free5gc-database-filler/"
+if [ -d "$DATABASE_FILLER_DIR" ]; then
+    cd $DATABASE_FILLER_DIR
+    docker compose down --rmi all -v --remove-orphans
+
+    cd $WORK_DIR
+
+    # Remove git directory
+    rm -rf $DATABASE_FILLER_DIR
+fi

@@ -15,19 +15,22 @@ show_help(){
     echo "  -d      Enable debug mode. Show all logs."
     echo "  -h      Show this message and exit."
     echo "  -s      Stop experiment execution and clear environment."
+    echo "  -u int  Set the number of UEs to test."
     echo ""
 }
 
 # Parse parameters
+NUM_UEs=10000
 DEBUG='false'
 CLEAR='false'
 STOP_CLEAR='false'
-while getopts ':cdhs' 'OPTKEY'; do
+while getopts ':u:cdhs' 'OPTKEY'; do
     case ${OPTKEY} in
         c) CLEAR='true' ;;
         d) DEBUG='true' ;;
         h) show_help; exit 0 ;;
         s) STOP_CLEAR='true' ;;
+        u) NUM_UEs=$OPTARG ;;
     esac
 done
 
@@ -179,6 +182,18 @@ make base
 docker compose build
 
 docker compose up -d
+cd $WORK_DIR
+
+# Fill free5GC database with IMSI info
+print "Adding necessary information to free5GC database, it can take a while..."
+git clone https://github.com/gabriel-lando/my5G-RANTester-free5gc-database-filler
+
+cd my5G-RANTester-free5gc-database-filler/
+
+wget https://raw.githubusercontent.com/gabriel-lando/free5gc-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
+
+NUM_DEVICES=$NUM_UEs docker compose up --build
+docker compose down --rmi all -v --remove-orphans
 cd $WORK_DIR
 
 # Pull images for the metrics collector
