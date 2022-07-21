@@ -15,22 +15,29 @@ show_help(){
     echo "  -d      Enable debug mode. Show all logs."
     echo "  -h      Show this message and exit."
     echo "  -s      Stop experiment execution and clear environment."
+    echo "  -t int  Set the time in seconds to wait before start."
     echo "  -u int  Set the number of UEs to test."
+    echo "  -w int  Set the time in ms to wait between each new connection."
     echo ""
 }
 
 # Parse parameters
+START_DELAY=60
 NUM_UEs=10000
+SLEEP_CONN=500
+
 DEBUG='false'
 CLEAR='false'
 STOP_CLEAR='false'
-while getopts ':u:cdhs' 'OPTKEY'; do
+while getopts ':t:u:w:cdhs' 'OPTKEY'; do
     case ${OPTKEY} in
         c) CLEAR='true' ;;
         d) DEBUG='true' ;;
         h) show_help; exit 0 ;;
         s) STOP_CLEAR='true' ;;
+        t) START_DELAY=$OPTARG ;;
         u) NUM_UEs=$OPTARG ;;
+        w) SLEEP_CONN=$OPTARG ;;
     esac
 done
 
@@ -192,7 +199,10 @@ cd my5G-RANTester-free5GC-Database-Filler/
 
 wget https://raw.githubusercontent.com/gabriel-lando/free5gc-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
 
-NUM_DEVICES=$NUM_UEs docker compose up --build
+# Generate .env file with the configs for docker compose
+echo NUM_DEVICES=$NUM_UEs > .env
+
+docker compose up --build
 docker compose down --rmi all -v --remove-orphans
 cd $WORK_DIR
 
@@ -213,6 +223,9 @@ git clone https://github.com/gabriel-lando/free5gc-my5G-RANTester-docker
 cd free5gc-my5G-RANTester-docker/
 git submodule init
 git submodule update --remote
+
+# Set test parameters for docker compose
+echo TEST_PARAMETERS=load-test-parallel -n $NUM_UEs -d $SLEEP_CONN -t $START_DELAY -a > .env
 
 docker compose up --build -d
 cd $WORK_DIR
