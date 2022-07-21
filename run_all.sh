@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Get current directory
+### Get current directory
 WORK_DIR=$(pwd)
 
-# Method to show help menu
+### Method to show help menu
 show_help(){
     echo ""
     echo "my5G-RANTester startup script"
@@ -21,9 +21,9 @@ show_help(){
     echo ""
 }
 
-# Parse parameters
+### Parse parameters
 START_DELAY=60
-NUM_UEs=10000
+NUM_UEs=1000
 SLEEP_CONN=500
 
 DEBUG='false'
@@ -41,7 +41,7 @@ while getopts ':t:u:w:cdhs' 'OPTKEY'; do
     esac
 done
 
-# Enable Debug mode
+### Enable Debug mode
 if ! $DEBUG; then
     exec >/dev/null 2>&1
 fi
@@ -50,7 +50,7 @@ fi
 ########### PRINT METHODS ###########
 #####################################
 
-# Print method to override "exec >/dev/null 2>&1"
+### Print method to override "exec >/dev/null 2>&1"
 COLOR="`tput setaf 6`" # Default color: Cyan
 DEFAULT="`tput sgr0`"
 print(){
@@ -63,25 +63,25 @@ print(){
     fi
 }
 
-# Print with GREEN color
+### Print with GREEN color
 print_ok(){
     local COLOR="`tput setaf 2`" # Green
     print $@
 }
 
-# Print with YELLOW color
+### Print with YELLOW color
 print_warn(){
     local COLOR="`tput setaf 3`" # Yellow
     print $@
 }
 
-# Print with RED color
+### Print with RED color
 print_err(){
     local COLOR="`tput setaf 1`" # Red
     print $@
 }
 
-# Read user inputs
+### Read user inputs
 USER_INPUT=""
 user_input(){
     local COLOR="`tput setaf 3`" # Yellow
@@ -96,9 +96,10 @@ user_input(){
 }
 
 #####################################
+########## PRE EXEC CHECKS ##########
 #####################################
 
-# Clear previous executions before run.
+#\## Clear previous executions before run.
 if $CLEAR || $STOP_CLEAR; then
     print "Cleaning environment from previous executions before run..."
     bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/stop_and_clear.sh)
@@ -108,7 +109,7 @@ if $CLEAR || $STOP_CLEAR; then
     fi
 fi
 
-# Check Kernel version first
+### Check Kernel version first
 VERSION_EXPECTED=5.4
 CURRENT_VERSION=$(uname -r | cut -c1-3)
 print "Checking Kernel version..."
@@ -125,12 +126,12 @@ else
     esac
 fi
 
-# Install dependencies
+### Install dependencies
 print "Checking and installing dependencies..."
 apt update 
 apt -y install git ca-certificates curl gnupg pass gnupg2 lsb-release make build-essential
 
-# Check and install Docker
+### Check and install Docker
 if docker compose version | grep "Docker Compose version v2" 2>&1 > /dev/null; then
     print_ok "-> Docker and Docker Compose OK."
 else
@@ -146,7 +147,7 @@ else
     apt -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 fi
 
-# Expose Docker API via TCP
+### Expose Docker API via TCP
 DOCKER_API_TCP="tcp://0.0.0.0:2375"
 if ! cat /lib/systemd/system/docker.service | grep "$DOCKER_API_TCP" 2>&1 > /dev/null; then
     print "-> Exposing Docker API via TCP at $DOCKER_API_TCP..."
@@ -157,7 +158,7 @@ if ! cat /lib/systemd/system/docker.service | grep "$DOCKER_API_TCP" 2>&1 > /dev
     service docker restart
 fi
 
-# Check and install gtp5g Kernel module
+### Check and install gtp5g Kernel module
 MODULE="gtp5g"
 if lsmod | grep "$MODULE" 2>&1 > /dev/null ; then
     print_ok "-> Module $MODULE installed!"
@@ -180,7 +181,11 @@ else
     fi
 fi
 
-# Create free5GC containers
+#####################################
+########## START EXPERIMENT #########
+#####################################
+
+### Create free5GC containers
 print "Creating free5GC containers, it can take a while..."
 
 git clone https://github.com/my5G/free5gc-docker-v3.0.6.git
@@ -191,7 +196,7 @@ docker compose build
 docker compose up -d
 cd $WORK_DIR
 
-# Fill free5GC database with IMSI info
+### Fill free5GC database with IMSI info
 print "Adding necessary information to free5GC database, it can take a while..."
 git clone https://github.com/gabriel-lando/my5G-RANTester-free5GC-Database-Filler
 
@@ -206,7 +211,7 @@ docker compose up --build
 docker compose down --rmi all -v --remove-orphans
 cd $WORK_DIR
 
-# Pull images for the metrics collector
+### Pull images for the metrics collector
 print "Preparing metrics collector containers..."
 
 git clone https://github.com/lucas-schierholt/ColetorDeMetricas-DockerStats
@@ -216,7 +221,7 @@ chmod -R 777 nodered_data/
 docker compose -f coleta.yml pull
 cd $WORK_DIR
 
-# Create my5G-RANTester container
+### Create my5G-RANTester container
 print "Creating my5G-RANTester container, it can take a while..."
 git clone https://github.com/gabriel-lando/free5gc-my5G-RANTester-docker
 
@@ -230,7 +235,7 @@ echo TEST_PARAMETERS=load-test-parallel -n $NUM_UEs -d $SLEEP_CONN -t $START_DEL
 docker compose up --build -d
 cd $WORK_DIR
 
-# Start metrics collector
+### Start metrics collector
 print "Starting metrics collector containers..."
 
 cd ColetorDeMetricas-DockerStats/
