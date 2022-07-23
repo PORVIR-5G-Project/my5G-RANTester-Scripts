@@ -3,6 +3,15 @@
 ### Get current directory
 WORK_DIR=$(pwd)
 
+### Default value of CLI parameters
+START_DELAY=60
+NUM_UEs=1000
+SLEEP_CONN=500
+
+DEBUG='false'
+CLEAR='false'
+STOP_CLEAR='false'
+
 ### Method to show help menu
 show_help(){
     echo ""
@@ -15,20 +24,13 @@ show_help(){
     echo "  -d      Enable debug mode. Show all logs."
     echo "  -h      Show this message and exit."
     echo "  -s      Stop experiment execution and clear environment."
-    echo "  -t int  Set the time in seconds to wait before start."
-    echo "  -u int  Set the number of UEs to test."
-    echo "  -w int  Set the time in ms to wait between each new connection."
+    echo "  -t int  Set the time in seconds to wait before start. (Defaut: $START_DELAY sec)"
+    echo "  -u int  Set the number of UEs to test. (Defaut: $NUM_UEs)"
+    echo "  -w int  Set the time in ms to wait between each new connection. (Defaut: $SLEEP_CONN ms)"
     echo ""
 }
 
-### Parse parameters
-START_DELAY=60
-NUM_UEs=1000
-SLEEP_CONN=500
-
-DEBUG='false'
-CLEAR='false'
-STOP_CLEAR='false'
+# Parse CLI parameters
 while getopts ':t:u:w:cdhs' 'OPTKEY'; do
     case ${OPTKEY} in
         c) CLEAR='true' ;;
