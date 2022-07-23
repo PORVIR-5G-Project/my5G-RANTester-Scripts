@@ -41,7 +41,7 @@ if [ -d "$FREE5GC_CORE_DIR" ]; then
 fi
 
 # Clear free5GC database filler data
-DATABASE_FILLER_DIR="my5G-RANTester-free5gc-database-filler/"
+DATABASE_FILLER_DIR="my5G-RANTester-free5GC-Database-Filler/"
 if [ -d "$DATABASE_FILLER_DIR" ]; then
     cd $DATABASE_FILLER_DIR
     docker compose down --rmi all -v --remove-orphans
