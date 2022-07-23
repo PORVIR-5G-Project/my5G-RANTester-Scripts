@@ -45,7 +45,7 @@ while getopts ':i:t:u:w:cdhs' 'OPTKEY'; do
 done
 
 # Check if Host IP was provided
-if [ -z "$HOST_IP" ]; then
+if [ -z "$HOST_IP" ] && ! $STOP_CLEAR; then
     show_help
     exit 0
 fi
