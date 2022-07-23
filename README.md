@@ -14,15 +14,26 @@ Scripts to run my5G-RANTester
     sudo apt -y install curl
     ```
 
-3. Run the `run_all.sh` script:
+3. Choose the 5G core you want:
+    - free5GC:
 
-    ```bash
-    sudo -s
-    ```
+      ```bash
+      sudo -s
+      ```
 
-    ```bash
-    bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/run_all.sh) -c
-    ```
+      ```bash
+      bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/free5gc_run_all.sh) -c
+      ```
+
+    - Open5GS:
+
+      ```bash
+      sudo -s
+      ```
+
+      ```bash
+      bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/open5gs_run_all.sh) -c
+      ```
 
 ## How to capture analytics logs and export to .csv file
 
