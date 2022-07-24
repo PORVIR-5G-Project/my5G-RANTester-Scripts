@@ -41,7 +41,7 @@ if [ -d "$TESTER_DIR" ]; then
 fi
 
 # Stop free5GC containers and clear data
-FREE5GC_CORE_DIR="free5gc-docker-v3.0.6/"
+FREE5GC_CORE_DIR="free5gc-compose/"
 if [ -d "$FREE5GC_CORE_DIR" ]; then
     cd $FREE5GC_CORE_DIR
     docker compose down --rmi all -v --remove-orphans

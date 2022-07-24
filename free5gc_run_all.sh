@@ -190,12 +190,10 @@ fi
 ### Create free5GC containers
 print "Creating free5GC containers, it can take a while..."
 
-git clone https://github.com/my5G/free5gc-docker-v3.0.6.git
-cd free5gc-docker-v3.0.6/
+git clone https://github.com/gabriel-lando/free5gc-compose.git
+cd free5gc-compose/
 make base
-docker compose build
-
-docker compose up -d
+docker compose up --build -d
 cd $WORK_DIR
 
 ### Fill free5GC database with IMSI info
@@ -228,8 +226,7 @@ print "Creating my5G-RANTester container, it can take a while..."
 git clone https://github.com/gabriel-lando/free5gc-my5G-RANTester-docker
 
 cd free5gc-my5G-RANTester-docker/
-git submodule init
-git submodule update --remote
+git submodule update --init --remote
 
 # Set test parameters for docker compose
 echo TEST_PARAMETERS=load-test-parallel -n $NUM_UEs -d $SLEEP_CONN -t $START_DELAY -a > .env
