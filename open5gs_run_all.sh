@@ -22,7 +22,7 @@ show_help(){
     echo ""
     echo "Options:"
     echo "  -c      Clear previous executions before run."
-    echo "  -d      Enable debug mode. Show all logs."
+    echo "  -d      Enable debug mode (show all logs)."
     echo "  -h      Show this message and exit."
     echo "  -i str  Host IP Address"
     echo "  -s      Stop experiment execution and clear environment."
