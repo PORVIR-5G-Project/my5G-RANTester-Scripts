@@ -190,7 +190,7 @@ docker compose up --build -d
 cd $WORK_DIR
 
 ### Fill Open5GS database with IMSI info
-print "Adding necessary information to Open5GS database, it can take a while..."
+print "Adding necessary information to Open5GS database..."
 git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-Open5GS-Database-Filler
 
 cd my5G-RANTester-Open5GS-Database-Filler/

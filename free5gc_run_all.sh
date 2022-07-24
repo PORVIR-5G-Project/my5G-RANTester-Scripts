@@ -197,7 +197,7 @@ docker compose up --build -d
 cd $WORK_DIR
 
 ### Fill free5GC database with IMSI info
-print "Adding necessary information to free5GC database, it can take a while..."
+print "Adding necessary information to free5GC database..."
 git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-free5GC-Database-Filler
 
 cd my5G-RANTester-free5GC-Database-Filler/
