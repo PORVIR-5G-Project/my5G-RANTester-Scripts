@@ -25,6 +25,7 @@ show_help() {
     echo ""
     echo "  -i      Check and Install free5GC dependencies."
     echo "  -r      Build and run free5GC core."
+    echo "  -t      Download core compatible tester."
     echo "  -f int  Fill free5GC core database. (Defaut: $NUM_UEs)"
     echo ""
     echo "  -s      Stop free5GC core."
@@ -83,9 +84,9 @@ run_core() {
 fill_core_database() {
     ### Fill free5GC database with IMSI info
     print "Adding necessary information to free5GC database..."
-    git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-free5GC-Database-Filler
+    git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-free5GC-Database-Filler my5G-RANTester-Database-Filler
 
-    cd my5G-RANTester-free5GC-Database-Filler/
+    cd my5G-RANTester-Database-Filler/
 
     wget https://raw.githubusercontent.com/gabriel-lando/free5gc-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
 
@@ -97,14 +98,19 @@ fill_core_database() {
     cd $WORK_DIR
 }
 
+download_core_tester() {
+    git clone https://github.com/gabriel-lando/free5gc-my5G-RANTester-docker my5G-RANTester
+}
+
 # Parse CLI parameters
-while getopts ':f:hdirsc' 'OPTKEY'; do
+while getopts ':f:hdirtsc' 'OPTKEY'; do
     case ${OPTKEY} in
         d) DEBUG='true' ;;
         h) CORE_TASK="H" ;;
         i) CORE_TASK="I" ;;
         r) CORE_TASK="R" ;;
-        f) CORE_TASK="f"; NUM_UEs=$OPTARG ;;
+        t) CORE_TASK="T" ;;
+        f) CORE_TASK="F"; NUM_UEs=$OPTARG ;;
         s) CORE_TASK="S" ;;
         c) CORE_TASK="C" ;;
     esac
@@ -128,6 +134,9 @@ if [ "$CORE_TASK" = "I" ]; then
     exit 0
 elif [ "$CORE_TASK" = "R" ]; then
     run_core
+    exit 0
+elif [ "$CORE_TASK" = "T" ]; then
+    download_core_tester
     exit 0
 elif [ "$CORE_TASK" = "F" ]; then
     fill_core_database $NUM_UEs
