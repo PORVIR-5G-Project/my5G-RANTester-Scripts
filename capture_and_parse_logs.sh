@@ -19,7 +19,11 @@ cd my5grantester_logs
 
 # Capture logs
 echo "Capturing Docker container logs..."
-docker logs my5grantester > my5grantester_logs.txt
+
+TESTERS=$(docker ps -a -f name=my5grantester -q)
+for tester in $TESTERS; do
+    docker logs $tester >> my5grantester_logs.txt
+done
 
 # Download scripts to parse logs
 echo "Downloading scripts..."
