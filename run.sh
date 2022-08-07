@@ -123,15 +123,9 @@ run_core
 ### Fill core database with IMSI info
 fill_core_database $NUM_UEs
 
-### Pull images for the metrics collector
-print "Preparing metrics collector containers..."
-
-git clone https://github.com/lucas-schierholt/ColetorDeMetricas-DockerStats
-
-cd ColetorDeMetricas-DockerStats/
-chmod -R 777 nodered_data/
-docker compose -f coleta.yml pull
-cd $WORK_DIR
+### Prepare metrics colector
+source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/metrics_collector.sh)
+prepare_metrics_collector
 
 ### Create my5G-RANTester container
 print "Creating my5G-RANTester container, it can take a while..."
@@ -152,8 +146,4 @@ docker compose -f docker-multi.yaml up --build -d
 cd $WORK_DIR
 
 ### Start metrics collector
-print "Starting metrics collector containers..."
-
-cd ColetorDeMetricas-DockerStats/
-docker compose -f coleta.yml up -d
-cd $WORK_DIR
+start_metrics_collector
