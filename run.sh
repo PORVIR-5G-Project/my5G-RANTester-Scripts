@@ -128,9 +128,11 @@ prepare_metrics_collector
 
 ### Create my5G-RANTester container
 print "Creating my5G-RANTester container, it can take a while..."
-git clone https://github.com/gabriel-lando/free5gc-my5G-RANTester-docker
 
-cd free5gc-my5G-RANTester-docker/
+# Clone tester repository
+download_core_tester
+
+cd my5G-RANTester/
 git submodule update --init --remote
 
 # Create config for multiple gNB
