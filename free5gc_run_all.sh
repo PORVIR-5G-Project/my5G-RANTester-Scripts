@@ -236,7 +236,9 @@ cd free5gc-my5G-RANTester-docker/
 git submodule update --init --remote
 
 # Create config for multiple gNB
-bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/generate_compose_multi_gnb.sh) -g $NUM_GNBs -u $NUM_UEs
+wget https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/generate_compose_multi_gnb.sh -O generate_compose_multi_gnb.sh
+chmod +x generate_compose_multi_gnb.sh
+./generate_compose_multi_gnb.sh -g $NUM_GNBs -u $NUM_UEs
 
 # Set test parameters for docker compose
 echo TEST_PARAMETERS=load-test-parallel -n $((NUM_UEs / NUM_GNBs)) -d $SLEEP_CONN -t $START_DELAY -a > .env
