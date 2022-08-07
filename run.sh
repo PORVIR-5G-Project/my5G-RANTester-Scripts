@@ -43,7 +43,7 @@ show_help(){
 }
 
 # Parse CLI parameters
-while getopts ':g:t:u:w:c:ldhs' 'OPTKEY'; do
+while getopts ':g:t:u:w:c:dhls' 'OPTKEY'; do
     case ${OPTKEY} in
         h) show_help; exit 0 ;;
         s) STOP_CLEAR='true' ;;
@@ -56,19 +56,6 @@ while getopts ':g:t:u:w:c:ldhs' 'OPTKEY'; do
         w) SLEEP_CONN=$OPTARG ;;
     esac
 done
-
-### Define what 5G core will be used
-if [ "$CORE_5G" = "1" ]; then
-    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/free5gc.sh)
-elif [ "$CORE_5G" = "2" ]; then
-    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/open5gs.sh)
-elif [ "$CORE_5G" = "3" ]; then
-    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/oai.sh)
-else
-    echo -e "\n ERROR: Please, select the 5G Core to use. \n"
-    show_help
-    exit 1
-fi
 
 ### Enable Debug mode
 if ! $DEBUG; then
@@ -95,6 +82,18 @@ if $CLEAR || $STOP_CLEAR; then
     if $STOP_CLEAR; then
         exit 0;
     fi
+fi
+
+### Define what 5G core will be used
+if [ "$CORE_5G" = "1" ]; then
+    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/free5gc.sh)
+elif [ "$CORE_5G" = "2" ]; then
+    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/open5gs.sh)
+elif [ "$CORE_5G" = "3" ]; then
+    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/oai.sh)
+else
+    print_err "ERROR: Please, select the 5G Core to use. Use '-h' for more info."
+    exit 1
 fi
 
 ### Check Kernel version first
