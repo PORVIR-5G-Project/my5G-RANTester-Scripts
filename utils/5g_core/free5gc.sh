@@ -8,7 +8,7 @@ MULTI_GNB_DIR="my5G-RANTester-Multi-gNodeB/"
 ### Default value of CLI parameters
 CLEAR='false'
 DEBUG='false'
-CORE_TASK='H'
+CORE_TASK='0'
 NUM_UEs=1000
 
 ### Method to show help menu
@@ -34,6 +34,8 @@ show_help() {
 
 ### Method to stop/clear free5GC core
 stop_clear_core() {
+    print "Shuting down free5GC Core..."
+
     if [ -d "$CORE_DIR" ]; then
         cd $CORE_DIR
 
@@ -108,8 +110,12 @@ while getopts ':f:hdirsc' 'OPTKEY'; do
     esac
 done
 
-# Show help menu
-if [ "$CORE_TASK" = "H" ]; then
+
+if [ "$CORE_TASK" = "0" ]; then
+    # Ignore
+    return;
+elif [ "$CORE_TASK" = "H" ]; then
+    # Show help menu
     show_help
     exit 0
 fi
