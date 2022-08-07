@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check and install gtp5g Kernel module
-intall_gtp5g(){
+install_gtp5g(){
     MODULE="gtp5g"
     if lsmod | grep "$MODULE" 2>&1 > /dev/null ; then
         print_ok "-> Module $MODULE installed!"
