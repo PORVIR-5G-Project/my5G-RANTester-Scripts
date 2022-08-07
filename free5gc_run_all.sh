@@ -5,6 +5,7 @@ WORK_DIR=$(pwd)
 
 ### Default value of CLI parameters
 START_DELAY=60
+NUM_GNBs=10
 NUM_UEs=1000
 SLEEP_CONN=500
 
@@ -20,25 +21,31 @@ show_help(){
     echo "Use: $0 [OPTIONS]"
     echo ""
     echo "Options:"
-    echo "  -c      Clear previous executions before run."
-    echo "  -d      Enable debug mode (show all logs)."
+    echo ""
     echo "  -h      Show this message and exit."
+    echo ""
     echo "  -s      Stop experiment execution and clear environment."
-    echo "  -t int  Set the time in seconds to wait before start. (Defaut: $START_DELAY sec)"
+    echo "  -c      Clear previous executions before run."
+    echo ""
+    echo "  -d      Enable debug mode (show all logs)."
+    echo ""
     echo "  -u int  Set the number of UEs to test. (Defaut: $NUM_UEs)"
+    echo "  -g int  Set the number of gNBs to test. (Defaut: $NUM_GNBs)"
+    echo "  -t int  Set the time in seconds to wait before start. (Defaut: $START_DELAY sec)"
     echo "  -w int  Set the time in ms to wait between each new connection. (Defaut: $SLEEP_CONN ms)"
     echo ""
 }
 
 # Parse CLI parameters
-while getopts ':t:u:w:cdhs' 'OPTKEY'; do
+while getopts ':g:t:u:w:cdhs' 'OPTKEY'; do
     case ${OPTKEY} in
-        c) CLEAR='true' ;;
-        d) DEBUG='true' ;;
         h) show_help; exit 0 ;;
         s) STOP_CLEAR='true' ;;
-        t) START_DELAY=$OPTARG ;;
+        c) CLEAR='true' ;;
+        d) DEBUG='true' ;;
         u) NUM_UEs=$OPTARG ;;
+        g) NUM_GNBs=$OPTARG ;;
+        t) START_DELAY=$OPTARG ;;
         w) SLEEP_CONN=$OPTARG ;;
     esac
 done
@@ -228,10 +235,13 @@ git clone https://github.com/gabriel-lando/free5gc-my5G-RANTester-docker
 cd free5gc-my5G-RANTester-docker/
 git submodule update --init --remote
 
-# Set test parameters for docker compose
-echo TEST_PARAMETERS=load-test-parallel -n $NUM_UEs -d $SLEEP_CONN -t $START_DELAY -a > .env
+# Create config for multiple gNB
+bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/generate_compose_multi_gnb.sh) -g $NUM_GNBs -u $NUM_UEs
 
-docker compose up --build -d
+# Set test parameters for docker compose
+echo TEST_PARAMETERS=load-test-parallel -n $((NUM_UEs / NUM_GNBs)) -d $SLEEP_CONN -t $START_DELAY -a > .env
+
+docker compose -f docker-multi.yaml up --build -d
 cd $WORK_DIR
 
 ### Start metrics collector
