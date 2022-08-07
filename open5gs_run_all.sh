@@ -110,7 +110,7 @@ user_input(){
 ########## PRE EXEC CHECKS ##########
 #####################################
 
-#\## Clear previous executions before run.
+### Clear previous executions before run.
 if $CLEAR || $STOP_CLEAR; then
     print "Cleaning environment from previous executions before run..."
     bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/stop_and_clear.sh)
