@@ -21,6 +21,7 @@ TESTER_DIR="my5G-RANTester/"
 if [ -d "$TESTER_DIR" ]; then
     cd $TESTER_DIR
     docker compose down --rmi all -v --remove-orphans
+    docker compose -f docker-multi.yaml down --rmi all -v --remove-orphans
 
     cd $WORK_DIR
 
