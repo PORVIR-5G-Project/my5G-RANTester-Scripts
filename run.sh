@@ -8,7 +8,7 @@ START_DELAY=60
 NUM_GNBs=10
 NUM_UEs=1000
 SLEEP_CONN=500
-CORE=0
+CORE_5G=0
 
 DEBUG='false'
 CLEAR='false'
@@ -42,20 +42,6 @@ show_help(){
     echo ""
 }
 
-# Method to define what 5G core will be used
-set_5g_core() {
-    if [ "$@" = "1" ]; then
-        source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/free5gc.sh)
-    elif [ "$@" = "2" ]; then
-        source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/open5gs.sh)
-    elif [ "$@" = "3" ]; then
-        source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/oai.sh)
-    else
-        echo "ERROR: Please, select the 5G Core to use."
-        exit 1
-    fi
-}
-
 # Parse CLI parameters
 while getopts ':g:t:u:w:c:ldhs' 'OPTKEY'; do
     case ${OPTKEY} in
@@ -63,13 +49,26 @@ while getopts ':g:t:u:w:c:ldhs' 'OPTKEY'; do
         s) STOP_CLEAR='true' ;;
         l) CLEAR='true' ;;
         d) DEBUG='true' ;;
-        c) set_5g_core $OPTARG ;;
+        c) CORE_5G=$OPTARG ;;
         u) NUM_UEs=$OPTARG ;;
         g) NUM_GNBs=$OPTARG ;;
         t) START_DELAY=$OPTARG ;;
         w) SLEEP_CONN=$OPTARG ;;
     esac
 done
+
+### Define what 5G core will be used
+if [ "$CORE_5G" = "1" ]; then
+    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/free5gc.sh)
+elif [ "$CORE_5G" = "2" ]; then
+    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/open5gs.sh)
+elif [ "$CORE_5G" = "3" ]; then
+    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/oai.sh)
+else
+    echo -e "\n ERROR: Please, select the 5G Core to use. \n"
+    show_help
+    exit 1
+fi
 
 ### Enable Debug mode
 if ! $DEBUG; then
