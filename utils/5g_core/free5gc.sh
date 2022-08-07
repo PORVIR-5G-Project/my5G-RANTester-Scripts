@@ -1,15 +1,15 @@
 #!/bin/bash
 
 ### Constants
-WORK_DIR=$(pwd)
+CORE_WORK_DIR=$(pwd)
 CORE_DIR="free5gc-compose/"
-MULTI_GNB_DIR="my5G-RANTester-Multi-gNodeB/"
+CORE_MULTI_GNB_DIR="my5G-RANTester-Multi-gNodeB/"
 
 ### Default value of CLI parameters
-CLEAR='false'
 DEBUG='false'
+CORE_CLEAR='false'
 CORE_TASK='0'
-NUM_UEs=1000
+CORE_NUM_UEs=1000
 
 ### Method to show help menu
 show_help() {
@@ -26,7 +26,7 @@ show_help() {
     echo "  -i      Check and Install free5GC dependencies."
     echo "  -r      Build and run free5GC core."
     echo "  -t      Download core compatible tester."
-    echo "  -f int  Fill free5GC core database. (Defaut: $NUM_UEs)"
+    echo "  -f int  Fill free5GC core database. (Defaut: $CORE_NUM_UEs)"
     echo ""
     echo "  -s      Stop free5GC core."
     echo "  -c      Stop and clear free5GC core."
@@ -41,9 +41,9 @@ stop_clear_core() {
         cd $CORE_DIR
 
         # Stop core containers only
-        if ! $CLEAR ; then
+        if ! $CORE_CLEAR ; then
             docker compose down
-            cd $WORK_DIR
+            cd $CORE_WORK_DIR
             return;
         fi
 
@@ -51,11 +51,11 @@ stop_clear_core() {
         docker compose down --rmi all -v --remove-orphans
 
         # Clear Multi gNB data
-        if [ -d "$MULTI_GNB_DIR" ]; then
+        if [ -d "$CORE_MULTI_GNB_DIR" ]; then
             docker compose down --rmi all -v --remove-orphans
         fi
 
-        cd $WORK_DIR
+        cd $CORE_WORK_DIR
 
         # Remove git directory
         rm -rf $CORE_DIR
@@ -78,7 +78,7 @@ run_core() {
     cd free5gc-compose/
     make base
     docker compose up --build -d
-    cd $WORK_DIR
+    cd $CORE_WORK_DIR
 }
 
 fill_core_database() {
@@ -95,7 +95,7 @@ fill_core_database() {
 
     docker compose up --build
     docker compose down --rmi all -v --remove-orphans
-    cd $WORK_DIR
+    cd $CORE_WORK_DIR
 }
 
 download_core_tester() {
@@ -110,7 +110,7 @@ while getopts ':f:hdirtsc' 'OPTKEY'; do
         i) CORE_TASK="I" ;;
         r) CORE_TASK="R" ;;
         t) CORE_TASK="T" ;;
-        f) CORE_TASK="F"; NUM_UEs=$OPTARG ;;
+        f) CORE_TASK="F"; CORE_NUM_UEs=$OPTARG ;;
         s) CORE_TASK="S" ;;
         c) CORE_TASK="C" ;;
     esac
@@ -139,13 +139,13 @@ elif [ "$CORE_TASK" = "T" ]; then
     download_core_tester
     exit 0
 elif [ "$CORE_TASK" = "F" ]; then
-    fill_core_database $NUM_UEs
+    fill_core_database $CORE_NUM_UEs
     exit 0
 elif [ "$CORE_TASK" = "S" ]; then
     stop_clear_core
     exit 0
 elif [ "$CORE_TASK" = "C" ]; then
-    CLEAR='true'
+    CORE_CLEAR='true'
     stop_clear_core
     exit 0
 fi

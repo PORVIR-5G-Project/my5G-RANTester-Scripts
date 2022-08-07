@@ -4,15 +4,15 @@
 WORK_DIR=$(pwd)
 
 ### Default value of CLI parameters
-START_DELAY=60
-NUM_GNBs=10
-NUM_UEs=1000
-SLEEP_CONN=500
-CORE_5G=0
+RUN_START_DELAY=60
+RUN_NUM_GNBs=10
+RUN_NUM_UEs=1000
+RUN_SLEEP_CONN=500
+RUN_CORE_5G=0
 
 DEBUG='false'
-CLEAR='false'
-STOP_CLEAR='false'
+RUN_CLEAR='false'
+RUN_STOP_CLEAR='false'
 
 ### Method to show help menu
 show_help(){
@@ -35,10 +35,10 @@ show_help(){
     echo "            2) Open5GS v2.3.6"
     echo "            3) OpenAirInterface v1.3.0"
     echo ""
-    echo "  -u int  Set the number of UEs to test. (Defaut: $NUM_UEs)"
-    echo "  -g int  Set the number of gNBs to test. (Defaut: $NUM_GNBs)"
-    echo "  -t int  Set the time in seconds to wait before start. (Defaut: $START_DELAY sec)"
-    echo "  -w int  Set the time in ms to wait between each new connection. (Defaut: $SLEEP_CONN ms)"
+    echo "  -u int  Set the number of UEs to test. (Defaut: $RUN_NUM_UEs)"
+    echo "  -g int  Set the number of gNBs to test. (Defaut: $RUN_NUM_GNBs)"
+    echo "  -t int  Set the time in seconds to wait before start. (Defaut: $RUN_START_DELAY sec)"
+    echo "  -w int  Set the time in ms to wait between each new connection. (Defaut: $RUN_SLEEP_CONN ms)"
     echo ""
 }
 
@@ -46,14 +46,14 @@ show_help(){
 while getopts ':g:t:u:w:c:dhls' 'OPTKEY'; do
     case ${OPTKEY} in
         h) show_help; exit 0 ;;
-        s) STOP_CLEAR='true' ;;
-        l) CLEAR='true' ;;
+        s) RUN_STOP_CLEAR='true' ;;
+        l) RUN_CLEAR='true' ;;
         d) DEBUG='true' ;;
-        c) CORE_5G=$OPTARG ;;
-        u) NUM_UEs=$OPTARG ;;
-        g) NUM_GNBs=$OPTARG ;;
-        t) START_DELAY=$OPTARG ;;
-        w) SLEEP_CONN=$OPTARG ;;
+        c) RUN_CORE_5G=$OPTARG ;;
+        u) RUN_NUM_UEs=$OPTARG ;;
+        g) RUN_NUM_GNBs=$OPTARG ;;
+        t) RUN_START_DELAY=$OPTARG ;;
+        w) RUN_SLEEP_CONN=$OPTARG ;;
     esac
 done
 
@@ -75,21 +75,21 @@ source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-
 
 ### Clear previous executions before run.
 # ToDo: Change it
-if $CLEAR || $STOP_CLEAR; then
+if $RUN_CLEAR || $RUN_STOP_CLEAR; then
     print "Cleaning environment from previous executions before run..."
     bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/stop_and_clear.sh)
 
-    if $STOP_CLEAR; then
+    if $RUN_STOP_CLEAR; then
         exit 0;
     fi
 fi
 
 ### Define what 5G core will be used
-if [ "$CORE_5G" = "1" ]; then
+if [ "$RUN_CORE_5G" = "1" ]; then
     source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/free5gc.sh)
-elif [ "$CORE_5G" = "2" ]; then
+elif [ "$RUN_CORE_5G" = "2" ]; then
     source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/open5gs.sh)
-elif [ "$CORE_5G" = "3" ]; then
+elif [ "$RUN_CORE_5G" = "3" ]; then
     source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/oai.sh)
 else
     print_err "ERROR: Please, select the 5G Core to use. Use '-h' for more info."
@@ -120,7 +120,7 @@ install_core_deps
 run_core
 
 ### Fill core database with IMSI info
-fill_core_database $NUM_UEs
+fill_core_database $RUN_NUM_UEs
 
 ### Prepare metrics colector
 source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/metrics_collector.sh)
@@ -138,10 +138,10 @@ git submodule update --init --remote
 # Create config for multiple gNB
 wget https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/generate_compose_multi_gnb.sh -O generate_compose_multi_gnb.sh
 chmod +x generate_compose_multi_gnb.sh
-./generate_compose_multi_gnb.sh -g $NUM_GNBs -u $NUM_UEs
+./generate_compose_multi_gnb.sh -g $RUN_NUM_GNBs -u $RUN_NUM_UEs
 
 # Set test parameters for docker compose
-echo TEST_PARAMETERS=load-test-parallel -n $((NUM_UEs / NUM_GNBs)) -d $SLEEP_CONN -t $START_DELAY -a > .env
+echo TEST_PARAMETERS=load-test-parallel -n $((RUN_NUM_UEs / RUN_NUM_GNBs)) -d $RUN_SLEEP_CONN -t $RUN_START_DELAY -a > .env
 
 docker compose -f docker-multi.yaml up --build -d
 cd $WORK_DIR
