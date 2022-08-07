@@ -5,7 +5,7 @@ WORK_DIR=$(pwd)
 
 ### Default value of CLI parameters
 IN_COMPOSE_NAME=docker-compose.yaml
-OUT_COMPOSE_NAME=compose_multi.yaml
+OUT_COMPOSE_NAME=docker-multi.yaml
 SETTINGS_FILE=config/tester.yaml
 NUM_GNBs=1
 NUM_UEs=1
