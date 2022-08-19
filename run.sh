@@ -9,6 +9,7 @@ RUN_NUM_GNBs=10
 RUN_NUM_UEs=1000
 RUN_SLEEP_CONN=500
 RUN_CORE_5G=0
+RUN_TEST=1
 
 DEBUG='false'
 RUN_CLEAR='false'
@@ -35,6 +36,10 @@ show_help(){
     echo "            2) Open5GS v2.3.6"
     echo "            3) OpenAirInterface v1.3.0"
     echo ""
+    echo "  -e int  Select the experiment to run:"
+    echo "            1) Connectivity test (Default)"
+    echo "            2) Throughput test"
+    echo ""
     echo "  -u int  Set the number of UEs to test. (Defaut: $RUN_NUM_UEs)"
     echo "  -g int  Set the number of gNBs to test. (Defaut: $RUN_NUM_GNBs)"
     echo "  -t int  Set the time in seconds to wait before start. (Defaut: $RUN_START_DELAY sec)"
@@ -43,7 +48,7 @@ show_help(){
 }
 
 # Parse CLI parameters
-while getopts ':g:t:u:w:c:dhls' 'OPTKEY'; do
+while getopts ':e:g:t:u:w:c:dhls' 'OPTKEY'; do
     case ${OPTKEY} in
         h) show_help; exit 0 ;;
         s) RUN_STOP_CLEAR='true' ;;
@@ -54,6 +59,7 @@ while getopts ':g:t:u:w:c:dhls' 'OPTKEY'; do
         g) RUN_NUM_GNBs=$OPTARG ;;
         t) RUN_START_DELAY=$OPTARG ;;
         w) RUN_SLEEP_CONN=$OPTARG ;;
+        e) RUN_TEST=$OPTARG ;;
     esac
 done
 
@@ -86,9 +92,9 @@ fi
 
 ### Define what 5G core will be used
 if [ "$RUN_CORE_5G" = "1" ]; then
-    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/free5gc.sh)
+    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/5g_core/free5gc.sh)
 elif [ "$RUN_CORE_5G" = "2" ]; then
-    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/open5gs.sh)
+    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/5g_core/open5gs.sh)
 elif [ "$RUN_CORE_5G" = "3" ]; then
     source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/oai.sh)
 else
@@ -141,7 +147,14 @@ chmod +x generate_compose_multi_gnb.sh
 ./generate_compose_multi_gnb.sh -g $RUN_NUM_GNBs -u $RUN_NUM_UEs
 
 # Set test parameters for docker compose
-echo TEST_PARAMETERS=load-test-parallel -n $((RUN_NUM_UEs / RUN_NUM_GNBs)) -d $RUN_SLEEP_CONN -t $RUN_START_DELAY -a > .env
+if [ "$RUN_TEST" = "1" ]; then
+    echo TEST_PARAMETERS=load-test-parallel -n $((RUN_NUM_UEs / RUN_NUM_GNBs)) -d $RUN_SLEEP_CONN -t $RUN_START_DELAY -a > .env
+elif [ "$RUN_TEST" = "2" ]; then
+    echo TEST_PARAMETERS=ue > .env
+else
+    print_err "ERROR: Wrong test case. Using default (Connectivity test)."
+    echo TEST_PARAMETERS=load-test-parallel -n $((RUN_NUM_UEs / RUN_NUM_GNBs)) -d $RUN_SLEEP_CONN -t $RUN_START_DELAY -a > .env
+fi
 
 docker compose -f docker-multi.yaml up --build -d
 cd $WORK_DIR

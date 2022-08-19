@@ -104,7 +104,7 @@ fill_core_database() {
 }
 
 download_core_tester() {
-   git clone https://github.com/gabriel-lando/open5gs-my5G-RANTester-docker my5G-RANTester
+   git clone -b throughput-test https://github.com/gabriel-lando/open5gs-my5G-RANTester-docker my5G-RANTester
 }
 
 # Parse CLI parameters
