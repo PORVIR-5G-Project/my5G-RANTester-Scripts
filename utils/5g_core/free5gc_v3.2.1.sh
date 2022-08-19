@@ -66,7 +66,7 @@ install_core_deps() {
     print "-> Checking free5GC dependencies..."
 
     # Install gtp5g
-    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/dependencies/gtp5g.sh)
+    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/dependencies/gtp5g.sh)
     install_gtp5g
 }
 
@@ -127,7 +127,7 @@ elif [ "$CORE_TASK" = "H" ]; then
 fi
 
 # Load print methods
-source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/print.sh)
+source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/print.sh)
 
 if [ "$CORE_TASK" = "I" ]; then
     install_core_deps
