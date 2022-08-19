@@ -74,7 +74,7 @@ fi
 #####################################
 
 # Load print methods
-source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/print.sh)
+source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/print.sh)
 
 #####################################
 ########## PRE EXEC CHECKS ##########
@@ -84,7 +84,7 @@ source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-
 # ToDo: Change it
 if $RUN_CLEAR || $RUN_STOP_CLEAR; then
     print "Cleaning environment from previous executions before run..."
-    bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/stop_and_clear.sh)
+    bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/stop_and_clear.sh)
 
     if $RUN_STOP_CLEAR; then
         exit 0;
@@ -99,14 +99,14 @@ elif [ "$RUN_CORE_5G" = "2" ]; then
 elif [ "$RUN_CORE_5G" = "3" ]; then
     source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/5g_core/open5gs_v2.3.6.sh)
 elif [ "$RUN_CORE_5G" = "4" ]; then
-    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/5g_core/oai.sh)
+    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/5g_core/oai.sh)
 else
     print_err "ERROR: Please, select the 5G Core to use. Use '-h' for more info."
     exit 1
 fi
 
 ### Check Kernel version first
-source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/dependencies/kernel_version.sh)
+source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/dependencies/kernel_version.sh)
 check_kernel_version
 
 ### Install APT dependencies
@@ -115,7 +115,7 @@ apt update
 apt -y install git ca-certificates curl gnupg pass gnupg2 lsb-release make build-essential
 
 ### Install Docker
-source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/dependencies/docker.sh)
+source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/dependencies/docker.sh)
 install_docker
 
 ### Install Core specific dependencies
@@ -132,7 +132,7 @@ run_core
 fill_core_database $RUN_NUM_UEs
 
 ### Prepare metrics colector
-source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/metrics_collector.sh)
+source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/metrics_collector.sh)
 prepare_metrics_collector
 
 ### Create my5G-RANTester container
@@ -145,7 +145,7 @@ cd my5G-RANTester/
 git submodule update --init --remote
 
 # Create config for multiple gNB
-wget https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/generate_compose_multi_gnb.sh -O generate_compose_multi_gnb.sh
+wget https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/generate_compose_multi_gnb.sh -O generate_compose_multi_gnb.sh
 chmod +x generate_compose_multi_gnb.sh
 ./generate_compose_multi_gnb.sh -g $RUN_NUM_GNBs -u $RUN_NUM_UEs
 
