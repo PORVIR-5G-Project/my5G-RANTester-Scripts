@@ -6,7 +6,7 @@ CORE_DIR="docker_open5gs/"
 CORE_MULTI_GNB_DIR="my5G-RANTester-Multi-gNodeB/"
 
 ### Default value of CLI parameters
-DEBUG='false'
+#VERBOSE='false'
 CORE_CLEAR='false'
 CORE_TASK='0'
 CORE_NUM_UEs=1000
@@ -21,7 +21,7 @@ show_help() {
     echo "Options:"
     echo ""
     echo "  -h      Show this message and exit."
-    echo "  -d      Enable debug mode (show all logs)."
+    echo "  -v      Enable verbose mode (show all logs)."
     echo ""
     echo "  -i      Check and Install Open5GS dependencies."
     echo "  -r      Build and run Open5GS core."
@@ -108,9 +108,9 @@ download_core_tester() {
 }
 
 # Parse CLI parameters
-while getopts ':f:hdirtsc' 'OPTKEY'; do
+while getopts ':f:hvirtsc' 'OPTKEY'; do
     case ${OPTKEY} in
-        d) DEBUG='true' ;;
+        v) VERBOSE='true' ;;
         h) CORE_TASK="H" ;;
         i) CORE_TASK="I" ;;
         r) CORE_TASK="R" ;;

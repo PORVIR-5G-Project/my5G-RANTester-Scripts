@@ -11,7 +11,7 @@ RUN_SLEEP_CONN=500
 RUN_CORE_5G=0
 RUN_TEST=1
 
-DEBUG='false'
+VERBOSE='false'
 RUN_CLEAR='false'
 RUN_STOP_CLEAR='false'
 
@@ -29,7 +29,7 @@ show_help(){
     echo "  -s      Stop experiment execution and clear environment."
     echo "  -l      Clear previous executions before run."
     echo ""
-    echo "  -d      Enable debug mode (show all logs)."
+    echo "  -v      Enable verbose mode (show all logs)."
     echo ""
     echo "  -c int  Select 5G Core to use:"
     echo "            1) free5GC v3.0.6"
@@ -49,12 +49,12 @@ show_help(){
 }
 
 # Parse CLI parameters
-while getopts ':e:g:t:u:w:c:dhls' 'OPTKEY'; do
+while getopts ':e:g:t:u:w:c:vhls' 'OPTKEY'; do
     case ${OPTKEY} in
         h) show_help; exit 0 ;;
         s) RUN_STOP_CLEAR='true' ;;
         l) RUN_CLEAR='true' ;;
-        d) DEBUG='true' ;;
+        v) VERBOSE='true' ;;
         c) RUN_CORE_5G=$OPTARG ;;
         u) RUN_NUM_UEs=$OPTARG ;;
         g) RUN_NUM_GNBs=$OPTARG ;;
@@ -65,7 +65,7 @@ while getopts ':e:g:t:u:w:c:dhls' 'OPTKEY'; do
 done
 
 ### Enable Debug mode
-if ! $DEBUG; then
+if ! [ "$VERBOSE" = "true" ]; then
     exec >/dev/null 2>&1
 fi
 
