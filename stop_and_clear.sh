@@ -23,6 +23,12 @@ if [ -d "$TESTER_DIR" ]; then
     docker compose down --rmi all -v --remove-orphans
     docker compose -f docker-multi.yaml down --rmi all -v --remove-orphans
 
+    # Clear Multi gNB data
+    MULTI_GNB_DIR = "my5G-RANTester-Multi-gNodeB/"
+    if [ -d "$MULTI_GNB_DIR" ]; then
+        docker compose down --rmi all -v --remove-orphans
+    fi
+
     cd $WORK_DIR
 
     # Remove git directory
@@ -35,12 +41,6 @@ if [ -d "$FREE5GC_CORE_DIR" ]; then
     cd $FREE5GC_CORE_DIR
     docker compose down --rmi all -v --remove-orphans
 
-    # Clear Multi gNB data
-    MULTI_GNB_DIR = "my5G-RANTester-Multi-gNodeB/"
-    if [ -d "$MULTI_GNB_DIR" ]; then
-        docker compose down --rmi all -v --remove-orphans
-    fi
-
     cd $WORK_DIR
 
     # Remove git directory
@@ -52,12 +52,6 @@ OPEN5GS_CORE_DIR="docker_open5gs/"
 if [ -d "$OPEN5GS_CORE_DIR" ]; then
     cd $OPEN5GS_CORE_DIR
     docker compose down --rmi all -v --remove-orphans
-
-    # Clear Multi gNB data
-    MULTI_GNB_DIR = "my5G-RANTester-Multi-gNodeB/"
-    if [ -d "$MULTI_GNB_DIR" ]; then
-        docker compose down --rmi all -v --remove-orphans
-    fi
 
     cd $WORK_DIR
 
