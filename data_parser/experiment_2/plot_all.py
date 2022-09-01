@@ -18,7 +18,6 @@ for core_idx, core in enumerate(cores):
 
     axis_x = 0
     axis_y = 0
-    #plt.figure(cores_name[core_idx])
     figure, axis = plt.subplots(MAX_AXIS_X, MAX_AXIS_Y)
     figure.canvas.manager.set_window_title(cores_name[core_idx])
 
