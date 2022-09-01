@@ -15,8 +15,8 @@ for c in 2 3; do
         bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/capture_and_parse_logs.sh) my5grantester-logs-$c-$i.csv
 
         echo "Clear experiment $i environment"
-        bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/stop_and_clear.sh) >/dev/null 2>&1
-        #docker image prune -a -f >/dev/null 2>&1
+        bash stop_only.sh >/dev/null 2>&1
+        docker image prune --filter="dangling=true" >/dev/null 2>&1
         docker volume prune -f >/dev/null 2>&1
     done
 done
@@ -41,8 +41,8 @@ for c in 1 3; do
         done
 
         echo "Clear experiment $i environment"
-        bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/stop_and_clear.sh) >/dev/null 2>&1
-        #docker image prune -a -f >/dev/null 2>&1
+        bash stop_only.sh >/dev/null 2>&1
+        docker image prune --filter="dangling=true" >/dev/null 2>&1
         docker volume prune -f >/dev/null 2>&1
     done
 done

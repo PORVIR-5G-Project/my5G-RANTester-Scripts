@@ -72,14 +72,19 @@ run_core() {
     ### Create Open5GS containers
     print "Creating Open5GS containers, it can take a while..."
 
-    git clone https://github.com/my5G/docker_open5gs.git 
-    cd docker_open5gs/base
-    docker build --no-cache --force-rm -t docker_open5gs .
+    if [ ! -d "free5gc-compose" ]; then
+        git clone https://github.com/my5G/docker_open5gs.git 
+        cd docker_open5gs/base
+        docker build --no-cache --force-rm -t docker_open5gs .
 
-    cd ../mongo
-    docker build --no-cache --force-rm -t docker_mongo .
+        cd ../mongo
+        docker build --no-cache --force-rm -t docker_mongo .
 
-    cd ..
+        cd ..
+    else
+        cd docker_open5gs/
+    fi
+
     echo -e "\n\n# HOST IP\nDOCKER_HOST_IP=$HOST_IP" >> .env
 
     docker compose up --build -d
@@ -89,7 +94,10 @@ run_core() {
 fill_core_database() {
     ### Fill Open5GS database with IMSI info
     print "Adding necessary information to Open5GS database..."
-    git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-Open5GS-Database-Filler my5G-RANTester-Database-Filler
+
+    if [ ! -d "my5G-RANTester-Database-Filler" ]; then
+        git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-Open5GS-Database-Filler my5G-RANTester-Database-Filler
+    fi
 
     cd my5G-RANTester-Database-Filler/
 

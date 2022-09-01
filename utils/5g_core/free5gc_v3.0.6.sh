@@ -74,9 +74,14 @@ run_core() {
     ### Create free5GC containers
     print "Creating free5GC containers, it can take a while..."
 
-    git clone https://github.com/gabriel-lando/free5gc-docker-v3.0.6 free5gc-compose
-    cd free5gc-compose/
-    make base
+    if [ ! -d "free5gc-compose" ]; then
+        git clone https://github.com/gabriel-lando/free5gc-docker-v3.0.6 free5gc-compose
+        cd free5gc-compose/
+        make base
+    else
+        cd free5gc-compose/
+    fi
+
     docker compose up --build -d
     cd $CORE_WORK_DIR
 }
@@ -84,8 +89,11 @@ run_core() {
 fill_core_database() {
     ### Fill free5GC database with IMSI info
     print "Adding necessary information to free5GC database..."
-    git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-free5GC-Database-Filler my5G-RANTester-Database-Filler
 
+    if [ ! -d "my5G-RANTester-Database-Filler" ]; then
+        git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-free5GC-Database-Filler my5G-RANTester-Database-Filler
+    fi
+    
     cd my5G-RANTester-Database-Filler/
 
     wget https://raw.githubusercontent.com/gabriel-lando/free5gc-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
