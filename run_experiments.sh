@@ -4,20 +4,22 @@ echo "Run connectivity tests"
 
 for c in 2 3; do
     echo "Run core $c tests"
-    for i in $(seq 1 11); do
-        echo "Running experiment $i"
-        bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/run.sh) -c $c -e 1 -g $i -u $((100*$i)) -t 60 -w 500
+    for w in 500 400 300 200 100; do
+        for i in $(seq 1 11); do
+            echo "Running experiment $i (w=$w)"
+            bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/run.sh) -c $c -e 1 -g $i -u $((100*$i)) -t 60 -w $w
 
-        echo "Waiting for experiment $i to finish"
-        sleep $((3*60))
+            echo "Waiting for experiment $i (w=$w) to finish"
+            sleep $((2*60))
 
-        echo "Collecting experiment $i data"
-        bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/capture_and_parse_logs.sh) my5grantester-logs-$c-$i.csv
+            echo "Collecting experiment $i (w=$w) data"
+            bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/capture_and_parse_logs.sh) my5grantester-logs-$c-$i-$w.csv
 
-        echo "Clear experiment $i environment"
-        bash stop_only.sh >/dev/null 2>&1
-        docker image prune --filter="dangling=true" -f >/dev/null 2>&1
-        docker volume prune -f >/dev/null 2>&1
+            echo "Clear experiment $i (w=$w) environment"
+            bash stop_only.sh >/dev/null 2>&1
+            docker image prune --filter="dangling=true" -f >/dev/null 2>&1
+            docker volume prune -f >/dev/null 2>&1
+        done
     done
 done
 

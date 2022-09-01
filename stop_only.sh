@@ -68,5 +68,5 @@ if [ -d "$DATABASE_FILLER_DIR" ]; then
     cd $WORK_DIR
 
     # Remove git directory
-    #rm -rf $DATABASE_FILLER_DIR
+    rm -rf $DATABASE_FILLER_DIR
 fi
