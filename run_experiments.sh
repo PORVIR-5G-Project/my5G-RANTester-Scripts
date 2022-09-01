@@ -16,7 +16,7 @@ for c in 2 3; do
 
         echo "Clear experiment $i environment"
         bash stop_only.sh >/dev/null 2>&1
-        docker image prune --filter="dangling=true" >/dev/null 2>&1
+        docker image prune --filter="dangling=true" -f >/dev/null 2>&1
         docker volume prune -f >/dev/null 2>&1
     done
 done
@@ -42,7 +42,7 @@ for c in 1 3; do
 
         echo "Clear experiment $i environment"
         bash stop_only.sh >/dev/null 2>&1
-        docker image prune --filter="dangling=true" >/dev/null 2>&1
+        docker image prune --filter="dangling=true" -f >/dev/null 2>&1
         docker volume prune -f >/dev/null 2>&1
     done
 done
