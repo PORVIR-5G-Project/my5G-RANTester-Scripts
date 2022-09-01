@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 base_filename = 'my5grantester-iperf-{}-{}-{}.csv'
-cores = [1, 3 ]
+cores = [ 1, 3 ]
 cores_name = [ 'free5GC', 'Open5GS' ]
-execs = [ 1, 2, 4, 6, 8, 10 ]
+execs = [ 1, 2, 4, 6, 8, 10 ]           # Number of UEs runnning iperf per execution
 
 MAX_AXIS_X = 2
 MAX_AXIS_Y = 3
