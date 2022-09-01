@@ -6,7 +6,7 @@ WORK_DIR=$(pwd)
 METRICS_COLLECTOR_DIR="ColetorDeMetricas-DockerStats/"
 if [ -d "$METRICS_COLLECTOR_DIR" ]; then
     cd $METRICS_COLLECTOR_DIR/
-    docker compose -f coleta.yml down --rmi all -v --remove-orphans
+    docker compose -f coleta.yml down -v --remove-orphans
 
     cd $WORK_DIR
 
@@ -21,12 +21,12 @@ TESTER_DIR="my5G-RANTester/"
 if [ -d "$TESTER_DIR" ]; then
     cd $TESTER_DIR
     docker compose -f docker-multi.yaml down -v --remove-orphans
-    docker compose down --rmi all -v --remove-orphans
+    docker compose down -v --remove-orphans
 
     # Clear Multi gNB data
     MULTI_GNB_DIR = "my5G-RANTester-Multi-gNodeB/"
     if [ -d "$MULTI_GNB_DIR" ]; then
-        docker compose down --rmi all -v --remove-orphans
+        docker compose down -v --remove-orphans
     fi
 
     cd $WORK_DIR
@@ -51,7 +51,7 @@ fi
 OPEN5GS_CORE_DIR="docker_open5gs/"
 if [ -d "$OPEN5GS_CORE_DIR" ]; then
     cd $OPEN5GS_CORE_DIR
-    docker compose down --rmi all -v --remove-orphans
+    docker compose down -v --remove-orphans
 
     cd $WORK_DIR
 

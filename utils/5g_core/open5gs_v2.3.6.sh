@@ -72,7 +72,7 @@ run_core() {
     ### Create Open5GS containers
     print "Creating Open5GS containers, it can take a while..."
 
-    if [ ! -d "free5gc-compose" ]; then
+    if [ ! -d "docker_open5gs" ]; then
         git clone https://github.com/my5G/docker_open5gs.git 
         cd docker_open5gs/base
         docker build --no-cache --force-rm -t docker_open5gs .
