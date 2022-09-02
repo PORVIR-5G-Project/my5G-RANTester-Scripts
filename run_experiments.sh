@@ -15,6 +15,9 @@ for c in 2 3; do
             echo "Collecting experiment $i (w=$w) data"
             bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/capture_and_parse_logs.sh) my5grantester-logs-$c-$i-$w.csv
 
+            echo "Collecting experiment $i data from influxdb"
+            docker exec influxdb sh -c "influx query 'from(bucket:\"database\") |> range(start:-5m)' --raw" > my5grantester-logs-influxdb-$c-$i-$w.csv
+
             echo "Clear experiment $i (w=$w) environment"
             bash stop_only.sh >/dev/null 2>&1
             docker image prune --filter="dangling=true" -f >/dev/null 2>&1
@@ -35,12 +38,17 @@ for c in 1 3; do
         echo "Waiting connections for experiment $i"
         sleep $((1*60))
 
-        echo "Waiting for experiment $i to finish"
-        sleep $((80))
+        echo "Starting experiment $i"
         for j in $(seq 0 $(($i - 1))); do
             IP=$(docker exec -ti my5grantester$j sh -c "ip -4 addr show uetun1 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'")
             docker exec my5grantester$j sh -c "iperf -c iperf --bind $IP -t 60 -i 1 -y C" > my5grantester-iperf-$c-$i-$j.csv &
         done
+
+        echo "Waiting for experiment $i to finish"
+        sleep $((80))
+
+        echo "Collecting experiment $i data from influxdb"
+        docker exec influxdb sh -c "influx query 'from(bucket:\"database\") |> range(start:-5m)' --raw" > my5grantester-iperf-influxdb-$c-$i.csv
 
         echo "Clear experiment $i environment"
         bash stop_only.sh >/dev/null 2>&1
