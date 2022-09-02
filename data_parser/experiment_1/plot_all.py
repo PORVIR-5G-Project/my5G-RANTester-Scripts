@@ -34,12 +34,13 @@ for core_idx, core in enumerate(cores):
                         time_base = int(row['timestamp'])
                     
                     try:
+                        # float(row['DataPlaneReady'])
                         dataplaneready = np.append(dataplaneready, float(row['DataPlaneReady']))
                         timestamp = np.append(timestamp, (int(row['timestamp']) - time_base) / 1000000000)
                     except:
                         continue
 
-                axis[axis_x, axis_y].plot(timestamp, dataplaneready, label = "#gNB {}".format(exp))
+                axis[axis_x, axis_y].scatter(timestamp, dataplaneready, label = "#gNB {}".format(exp), s=0.2)
 
         #axis[axis_x, axis_y].plot(timestamp, dataplaneready, label = "#gNB {} (Delay {})".format(exp, exe))
         axis[axis_x, axis_y].set_title("{} (Delay {})".format(cores_name[core_idx], exe))
