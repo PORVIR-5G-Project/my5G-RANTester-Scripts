@@ -108,6 +108,7 @@ run_core() {
 }
 
 fill_core_database() {
+    print "ToDo: Adding necessary information to OpenAirInterface database..."
     ### Fill OpenAirInterface database with IMSI info
     # print "Adding necessary information to OpenAirInterface database..."
 
