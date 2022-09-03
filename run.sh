@@ -35,7 +35,7 @@ show_help(){
     echo "            1) free5GC v3.0.6"
     echo "            2) free5GC v3.2.1"
     echo "            3) Open5GS v2.3.6"
-    echo "            4) OpenAirInterface v1.3.0"
+    echo "            4) OpenAirInterface v1.4.0"
     echo ""
     echo "  -e int  Select the experiment to run:"
     echo "            1) Connectivity test (Default)"
@@ -99,7 +99,7 @@ elif [ "$RUN_CORE_5G" = "2" ]; then
 elif [ "$RUN_CORE_5G" = "3" ]; then
     source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/5g_core/open5gs_v2.3.6.sh)
 elif [ "$RUN_CORE_5G" = "4" ]; then
-    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/5g_core/oai.sh)
+    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/5g_core/oai_v1.4.0.sh)
 else
     print_err "ERROR: Please, select the 5G Core to use. Use '-h' for more info."
     exit 1
