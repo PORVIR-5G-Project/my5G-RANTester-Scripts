@@ -25,7 +25,7 @@ for c in 2 3; do
     done
 done
 
-echo "Clean environment"
+echo "Cleaning environment"
 bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/stop_and_clear.sh)
 docker image prune -a -f >/dev/null 2>&1
 docker volume prune -f >/dev/null 2>&1
@@ -61,3 +61,8 @@ for e in $(seq 1 16); do
         done
     done
 done
+
+echo "Cleaning environment"
+bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/stop_and_clear.sh)
+docker image prune -a -f >/dev/null 2>&1
+docker volume prune -f >/dev/null 2>&1
