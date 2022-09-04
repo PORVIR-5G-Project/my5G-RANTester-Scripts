@@ -19,17 +19,21 @@ for c in 2 3; do
             docker exec influxdb sh -c "influx query 'from(bucket:\"database\") |> range(start:-5m)' --raw" > my5grantester-logs-influxdb-$c-$w-$i.csv
 
             echo "Clear experiment $i (w=$w) environment"
-            bash stop_only.sh >/dev/null 2>&1
-            docker image prune --filter="dangling=true" -f >/dev/null 2>&1
-            docker volume prune -f >/dev/null 2>&1
+            bash stop_only.sh
+            docker image prune --filter="dangling=true" -f
+            docker volume prune -f
+
+            sleep 15
         done
     done
 done
 
 echo "Cleaning environment"
+sleep $((1*60))
 bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/stop_and_clear.sh)
-docker image prune -a -f >/dev/null 2>&1
-docker volume prune -f >/dev/null 2>&1
+docker image prune -a -f
+docker volume prune -f
+sleep $((1*60))
 
 echo "Run throughtput tests"
 # Run 15 times all throughput tests
@@ -56,14 +60,18 @@ for e in $(seq 1 16); do
             docker exec influxdb sh -c "influx query 'from(bucket:\"database\") |> range(start:-5m)' --raw" > my5grantester-iperf-influxdb-$e-$c-$i.csv
 
             echo "Clear experiment $i environment"
-            bash stop_only.sh >/dev/null 2>&1
-            docker image prune --filter="dangling=true" -f >/dev/null 2>&1
-            docker volume prune -f >/dev/null 2>&1
+            bash stop_only.sh
+            docker image prune --filter="dangling=true" -f
+            docker volume prune -f
+
+            sleep 15
         done
     done
 done
 
 echo "Cleaning environment"
+sleep $((1*60))
 bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/stop_and_clear.sh)
-docker image prune -a -f >/dev/null 2>&1
-docker volume prune -f >/dev/null 2>&1
+docker image prune -a -f
+docker volume prune -f
+sleep $((1*60))
