@@ -1,4 +1,5 @@
 #!/bin/bash
+# Run: screen -L -Logfile output.txt ./run_experiments.sh
 
 echo "Run connectivity tests"
 for c in 2 3; do
@@ -6,7 +7,7 @@ for c in 2 3; do
     for w in 500 400 300 200 100; do
         for i in 1 3 5 7 9 11; do
             echo "Running experiment $i (w=$w)"
-            bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/run.sh) -c $c -e 1 -g $i -u $((100*$i)) -t 60 -w $w
+            bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/run.sh) -c $c -e 1 -g $i -u $((100*$i)) -t 60 -w $w -v
 
             echo "Waiting for experiment $i (w=$w) to finish"
             sleep $((2*60))
@@ -37,7 +38,7 @@ for e in $(seq 1 16); do
         echo "Run core $c tests (exec $e)"
         for i in 1 2 4 6 8 10; do
             echo "Running experiment $i"
-            bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/run.sh) -c $c -e 2 -g $i
+            bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/run.sh) -c $c -e 2 -g $i -v
 
             echo "Waiting connections for experiment $i"
             sleep $((1*60))
