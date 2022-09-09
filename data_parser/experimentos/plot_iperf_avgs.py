@@ -48,8 +48,11 @@ for vm in vm_configs:
                             continue
 
                 if throughput.size > 0:
-                    axis[axis_x, axis_y].plot(timestamp, throughput, label = "#UE {} (exec {})".format(exe, exp))
-                    axis[axis_x, axis_y].plot(timestamp, avg_throughput, label = "AVG #UE {} (exec {})".format(exe, exp))
+                    # Get color
+                    color = next(axis[axis_x, axis_y]._get_lines.prop_cycler)['color']
+
+                    axis[axis_x, axis_y].plot(timestamp, throughput, label = "#UE {} (exec {})".format(exe, exp), color=color)
+                    axis[axis_x, axis_y].plot(timestamp, avg_throughput, label = "AVG #UE {} (exec {})".format(exe, exp), color=color)
                     # axis[axis_x, axis_y].legend()
 
             num_ues = all_avg_throughput.size
