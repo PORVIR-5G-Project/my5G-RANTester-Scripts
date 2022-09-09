@@ -1,3 +1,5 @@
 # Ignore CSV files
 *.zip
 *.csv
+*.log
+*.txt
