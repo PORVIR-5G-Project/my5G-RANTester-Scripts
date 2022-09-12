@@ -25,7 +25,7 @@ for vm in vm_configs:
         axis_x = 0
         axis_y = 0
         figure, axis = plt.subplots(MAX_AXIS_X, MAX_AXIS_Y)
-        figure.canvas.manager.set_window_title(cores_name[core_idx])
+        figure.canvas.manager.set_window_title(cores_name[core_idx] + " - " + vm)
 
         for exe in execs:
             for exp in experiments:
@@ -35,6 +35,10 @@ for vm in vm_configs:
 
                 avg_per_brust = [np.array([])] * UE_PER_GNB
                 avg_ts_per_brust = [np.array([])] * UE_PER_GNB
+
+                dataplane_avg = 0
+                dataplane_pvar = 0
+                dataplane_pstdev = 0
 
                 with open(base_filename.format(core, exe, exp), newline='') as csvfile:
                     reader = csv.DictReader(csvfile)
@@ -74,9 +78,12 @@ for vm in vm_configs:
                     axis[axis_x, axis_y].scatter(timestamp_to_plot, avg_to_plot, label = "#gNB {}".format(exp), s=5, color=color)
 
                     # Calculate the average and standard deviation
-                    dataplane_avg = statistics.mean(dataplaneready)
-                    dataplane_pvar = statistics.pvariance(dataplaneready)
-                    dataplane_pstdev = statistics.pstdev(dataplaneready)
+                    try:
+                        dataplane_avg = statistics.mean(dataplaneready)
+                        dataplane_pvar = statistics.pvariance(dataplaneready)
+                        dataplane_pstdev = statistics.pstdev(dataplaneready)
+                    except:
+                        continue
 
                     # Plot the average
                     dataplane_avg_arr = np.repeat(dataplane_avg, dataplaneready.size)
@@ -93,7 +100,6 @@ for vm in vm_configs:
 
         #figure.legend()        
         plt.show(block=False)
-
-    break
+        #plt.savefig(cores_name[core_idx] + " - " + vm + ".svg", format="svg")
 
 input("Press Enter to continue...")
