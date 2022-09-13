@@ -5,7 +5,7 @@ import numpy as np
 MAX_AXIS_X = 2
 MAX_AXIS_Y = 2
 
-vm_configs = [ "TG2-8C-8GB", "TG2-6C-8GB", "TG2-4C-4GB" ]
+vm_configs = [ "TG2-12C-8GB_avg" ] #[ "TG2-8C-8GB", "TG2-6C-8GB", "TG2-4C-4GB" ]
 cores_name = [ 'free5GC', 'Open5GS' ]
 execs = [ 500, 400, 300, 200, 100 ]     # Delays between connections in ms
 cores = [ 2, 3 ]                        # free5GC and Open5GS
