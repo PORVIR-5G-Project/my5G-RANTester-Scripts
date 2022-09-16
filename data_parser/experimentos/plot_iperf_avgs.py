@@ -6,7 +6,7 @@ base_filename = 'my5grantester-iperf-{}-{}-{}.csv'
 cores = [ 1, 3 ]
 cores_name = [ 'free5GC', 'Open5GS' ]
 execs = [ 1, 2, 4, 6, 8, 10 ]           # Number of UEs runnning iperf per execution
-vm_configs = [ "TG2-8C-8GB", "TG2-6C-8GB", "TG2-4C-4GB" ]
+vm_configs = [ "TG2-12C-8GB", "TG2-8C-8GB", "TG2-6C-8GB", "TG2-4C-4GB" ]
 
 MAX_AXIS_X = 2
 MAX_AXIS_Y = 3

@@ -2,7 +2,7 @@ import csv
 import statistics
 import numpy as np
 
-vm_configs = [ "TG2-8C-8GB", "TG2-6C-8GB", "TG2-4C-4GB" ]
+vm_configs = [ "TG2-12C-8GB", "TG2-8C-8GB", "TG2-6C-8GB", "TG2-4C-4GB" ]
 cores_name = [ 'free5GC', 'Open5GS' ]
 cores = [ 1, 3 ]
 execs = list(range(1, 17))              # Executions 1 to 16
