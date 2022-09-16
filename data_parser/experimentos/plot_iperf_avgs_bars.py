@@ -63,8 +63,8 @@ for vm in vm_configs:
                     # Get color
                     color = next(axis[axis_x, axis_y]._get_lines.prop_cycler)['color']
 
-                    axis[axis_x, axis_y].plot(timestamp, throughput, label = "#UE {} (exec {})".format(exe, exp), color=color)
-                    axis[axis_x, axis_y].plot(timestamp, avg_throughput, label = "AVG #UE {} (exec {})".format(exe, exp), color=color)
+                    axis[axis_x, axis_y].plot(timestamp[1:-1], throughput[1:-1], label = "#UE {} (exec {})".format(exe, exp), color=color)
+                    # axis[axis_x, axis_y].plot(timestamp, avg_throughput, label = "AVG #UE {} (exec {})".format(exe, exp), color=color)
 
 
             num_ues = all_avg_throughput.size
@@ -88,5 +88,7 @@ for vm in vm_configs:
         plt.show(block=False)
 
         axis_bar += 1
+
+    # break
 
 input("Press Enter to continue...")
