@@ -69,25 +69,37 @@ for vm in vm_configs:
 
             num_ues = all_avg_throughput.size
             sum_avg_throughput = np.sum(all_avg_throughput)
-            axis[axis_x, axis_y].set_title("#UE {}/{} (Sum avg: {:.2f})".format(num_ues, exe, sum_avg_throughput))
+            axis[axis_x, axis_y].set_title("#UEs = {}".format(num_ues), fontsize=10)
+            
             axis_y += 1
             if axis_y == MAX_AXIS_Y:
                 axis_y = 0
                 axis_x += 1
 
         bottom_bar = np.zeros(len(execs))
+        ax_bar[axis_bar].set_title(cores_name[core_idx])
         for i in range(0, max(execs)):
             ax_bar[axis_bar].bar(list(map(str,execs)), throughput_sum[i], bottom=bottom_bar, label="UE #" + str(i + 1))
             bottom_bar += np.array(throughput_sum[i])
 
-        ax_bar[axis_bar].set_title(cores_name[core_idx])
-        fig_bar.text(0.5, 0.04, "Numero de UEs", ha='center', fontsize=12)
-        fig_bar.text(0.04, 0.5, "Largura de banda (Mbps)", va='center', rotation='vertical', fontsize=12)
-        fig_bar.tight_layout(rect=[0.05, 0.05, 0.95, 0.95])
-
-        plt.show(block=False)
+        for i in range(0, len(execs)):
+            throughput_sum_total = np.sum([row[i] for row in throughput_sum])
+            print("Core {} - VM {} - Num UE {} - Throughput {:.2f}".format(cores_name[core_idx], vm, execs[i], throughput_sum_total))
 
         axis_bar += 1
+
+        figure.text(.5, 0.96, cores_name[core_idx], ha='center', fontsize=15)
+        figure.text(0.5, 0.04, "Tempo do experimento (s)", ha='center', fontsize=12)
+        figure.text(0.04, 0.5, "Largura de banda (Mbps)", va='center', rotation='vertical', fontsize=12)
+        figure.tight_layout(rect=[0.08, 0.08, 0.95, 0.95])
+
+        plt.subplots_adjust(left=0.08, bottom=0.09, right=0.95, top=0.91, wspace=0.15, hspace=0.25)
+        plt.show(block=False)
+
+
+    fig_bar.text(0.5, 0.04, "Número de UEs", ha='center', fontsize=12)
+    fig_bar.text(0.04, 0.5, "Largura de banda (Mbps)", va='center', rotation='vertical', fontsize=12)
+    fig_bar.tight_layout(rect=[0.05, 0.05, 0.95, 0.95])
 
     # break
 
