@@ -90,8 +90,8 @@ for vm in vm_configs:
             break
 
 
-    figure.suptitle('Tempo entre cada conexão (ms)')
-    figure.text(0.5, 0.04, "Numero de gNBs por núcleo", ha='center')
+    # figure.suptitle('Tempo entre cada conexão (ms)')
+    figure.text(0.5, 0.04, "Número de gNBs por núcleo", ha='center')
     figure.text(0.04, 0.5, "Média e desvio padrão de falhas de conexão", va='center', rotation='vertical')
     figure.tight_layout(rect=[0.15, 0.1, 0.95, 0.93])
 

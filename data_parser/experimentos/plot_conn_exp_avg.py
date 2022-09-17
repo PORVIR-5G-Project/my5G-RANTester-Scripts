@@ -92,7 +92,7 @@ for vm in vm_configs:
                         continue
 
                     # Plot the average
-                    print ("Core {}: {}ms - Exp {:2d}: {:.2f}ms".format(cores_name[core_idx], exe, exp, dataplane_avg))
+                    # print ("Core {}: {}ms - Exp {:2d}: {:.2f}ms".format(cores_name[core_idx], exe, exp, dataplane_avg))
 
                     dataplane_avg_arr = np.repeat(dataplane_avg, dataplaneready.size)
                     curr_ax.plot(timestamp, dataplane_avg_arr, color=color)
@@ -103,15 +103,15 @@ for vm in vm_configs:
             curr_ax.set_title(str(exe) + " ms", fontsize=10)
             axis_x += 1
 
-    figure.text(.55, 0.98, 'Tempo entre cada conexão (ms)', ha='center', fontsize=12)
-    figure.text(.33, 0.96, cores_name[0], ha='center', fontsize=12)
-    figure.text(.77, 0.96, cores_name[1], ha='center', fontsize=12)
+    # figure.text(.55, 0.98, 'Tempo entre cada conexão (ms)', ha='center', fontsize=12)
+    figure.text(.31, 0.96, cores_name[0], ha='center', fontsize=15)
+    figure.text(.75, 0.96, cores_name[1], ha='center', fontsize=15)
 
     figure.text(0.5, 0.04, "Tempo do experimento (s)", ha='center', fontsize=12)
     figure.text(0.04, 0.5, "Tempo de conexão do UE (ms)", va='center', rotation='vertical', fontsize=12)
-    figure.tight_layout(rect=[0.15, 0.1, 0.95, 0.92])
+    figure.tight_layout(rect=[0.1, 0.08, 0.95, 0.95])
 
-    plt.subplots_adjust(left=0.15, bottom=0.1, right=0.95, top=0.92, wspace=0.25, hspace=0.65)
+    plt.subplots_adjust(left=0.12, bottom=0.08, right=0.95, top=0.93, wspace=0.15, hspace=0.3)
 
         #figure.legend()  
         #figure.tight_layout()      
