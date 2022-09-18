@@ -1,10 +1,13 @@
 import csv
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.patheffects as path_effects
 import numpy as np
 
 MAX_AXIS_X = 5
 MAX_AXIS_Y = 1
+
+mpl.rc('font',family='Times New Roman')
 
 COLOR_FREE5GC_MAIN = "orange"
 COLOR_FREE5GC_LINE = "tab:orange"
@@ -28,6 +31,10 @@ for vm in vm_configs:
     axis_y = 0
     figure, axis = plt.subplots(MAX_AXIS_X, MAX_AXIS_Y)
     figure.canvas.manager.set_window_title(vm)
+    figure.set_size_inches((6, 7))
+
+    rects1 = None
+    rects2 = None
 
     with open(base_filename, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
@@ -65,17 +72,17 @@ for vm in vm_configs:
         rects1 = curr_ax.bar(x - width/2, core_res[idx_exe][:,0], width, label=cores_name[0], color=COLOR_FREE5GC_MAIN)
         rects2 = curr_ax.bar(x + width/2, core_res[idx_exe][:,1], width, label=cores_name[1], color=COLOR_OPEN5GS_MAIN)
 
-        rects1 = curr_ax.plot(x, core_stats[idx_exe][:,0], color=COLOR_FREE5GC_LINE) #, path_effects=[path_effects.SimpleLineShadow(), path_effects.Normal()])
-        rects2 = curr_ax.plot(x, core_stats[idx_exe][:,1], color=COLOR_OPEN5GS_LINE) #, path_effects=[path_effects.SimpleLineShadow(), path_effects.Normal()])
+        curr_ax.plot(x, core_stats[idx_exe][:,0], color=COLOR_FREE5GC_LINE) #, path_effects=[path_effects.SimpleLineShadow(), path_effects.Normal()])
+        curr_ax.plot(x, core_stats[idx_exe][:,1], color=COLOR_OPEN5GS_LINE) #, path_effects=[path_effects.SimpleLineShadow(), path_effects.Normal()])
 
-        rects1 = curr_ax.scatter(x, core_stats[idx_exe][:,0], s=10, color=COLOR_FREE5GC_LINE)
-        rects2 = curr_ax.scatter(x, core_stats[idx_exe][:,1], s=10, color=COLOR_OPEN5GS_LINE)
+        curr_ax.scatter(x, core_stats[idx_exe][:,0], s=10, color=COLOR_FREE5GC_LINE)
+        curr_ax.scatter(x, core_stats[idx_exe][:,1], s=10, color=COLOR_OPEN5GS_LINE)
         
-        curr_ax.set_title(str(exe) + " ms")
+        curr_ax.set_title(str(exe) + " ms", fontsize=12)
         # curr_ax.set_xlabel("Numero de gNBs")
         # curr_ax.set_ylabel("Average UEs failed")
         curr_ax.set_xticks(experiments)
-        curr_ax.legend()
+        # curr_ax.legend()
 
         # curr_ax.bar_label(rects1, padding=3)
         # curr_ax.bar_label(rects2, padding=3)
@@ -91,15 +98,13 @@ for vm in vm_configs:
 
 
     # figure.suptitle('Tempo entre cada conexão (ms)')
-    figure.text(0.5, 0.04, "Número de gNBs por núcleo", ha='center')
-    figure.text(0.04, 0.5, "Média e desvio padrão de falhas de conexão", va='center', rotation='vertical')
+    figure.text(0.5, 0.04, "Número de gNBs por núcleo", ha='center', fontsize=12)
+    figure.text(0.04, 0.5, "Média e desvio padrão de falhas de conexão", va='center', rotation='vertical', fontsize=12)
     figure.tight_layout(rect=[0.15, 0.1, 0.95, 0.93])
 
     plt.subplots_adjust(left=0.15, bottom=0.1, right=0.95, top=0.93, wspace=0.5, hspace=0.65)
 
-    # mng = plt.get_current_fig_manager()
-    # mng.resize(*mng.window.maxsize())
+    plt.figlegend([rects1, rects2], cores_name, loc = 'upper left', ncol=5, labelspacing=0., fontsize=12)
     plt.show(block=False)
-    # plt.savefig(vm + ".svg", format="svg")
 
 input("Press Enter to continue...")

@@ -1,7 +1,11 @@
 import csv
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import statistics
 import numpy as np
+
+plt.style.use('seaborn-whitegrid')
+mpl.rc('font',family='Times New Roman')
 
 INITIAL_UE = 43
 UE_PER_GNB = 100
@@ -15,14 +19,13 @@ experiments = [ 1, 3, 5, 7, 9, 11 ]     # Experiments 1 to 11, step 2
 MAX_AXIS_X = 5
 MAX_AXIS_Y = 2
 
-plt.style.use('seaborn-whitegrid')
-
 for vm in vm_configs:
     base_filename = vm + "\\" + "my5grantester-logs-{}-{}-{}.csv"
 
 
     figure, axis = plt.subplots(MAX_AXIS_X, MAX_AXIS_Y)
-    figure.canvas.manager.set_window_title(vm)   
+    figure.canvas.manager.set_window_title(vm)
+    figure.set_size_inches((6, 7))
 
     for core_idx, core in enumerate(cores):
         axis_x = 0
@@ -104,18 +107,15 @@ for vm in vm_configs:
             axis_x += 1
 
     # figure.text(.55, 0.98, 'Tempo entre cada conexão (ms)', ha='center', fontsize=12)
-    figure.text(.31, 0.96, cores_name[0], ha='center', fontsize=15)
-    figure.text(.75, 0.96, cores_name[1], ha='center', fontsize=15)
+    figure.text(.31, 0.98, cores_name[0], ha='center', fontsize=12)
+    figure.text(.75, 0.98, cores_name[1], ha='center', fontsize=12)
 
     figure.text(0.5, 0.04, "Tempo do experimento (s)", ha='center', fontsize=12)
     figure.text(0.04, 0.5, "Tempo de conexão do UE (ms)", va='center', rotation='vertical', fontsize=12)
-    figure.tight_layout(rect=[0.1, 0.08, 0.95, 0.95])
+    figure.tight_layout(rect=[0.15, 0.1, 0.95, 0.95])
 
-    plt.subplots_adjust(left=0.12, bottom=0.08, right=0.95, top=0.93, wspace=0.15, hspace=0.3)
-
-        #figure.legend()  
-        #figure.tight_layout()      
+    plt.subplots_adjust(left=0.15, bottom=0.1, right=0.95, top=0.93, wspace=0.15, hspace=0.5)
+     
     plt.show(block=False)
-        #plt.savefig(cores_name[core_idx] + " - " + vm + ".svg", format="svg")
 
 input("Press Enter to continue...")

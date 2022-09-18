@@ -1,6 +1,10 @@
 import csv
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
+
+plt.style.use('seaborn-whitegrid')
+mpl.rc('font',family='Times New Roman')
 
 base_filename = 'my5grantester-iperf-{}-{}-{}.csv'
 cores = [ 1, 3 ]
@@ -8,16 +12,15 @@ cores_name = [ 'free5GC', 'Open5GS' ]
 execs = [ 1, 2, 4, 6, 8, 10 ]           # Number of UEs runnning iperf per execution
 vm_configs = [ "TG2-12C-8GB", "TG2-8C-8GB", "TG2-6C-8GB", "TG2-4C-4GB" ]
 
-MAX_AXIS_X = 2
-MAX_AXIS_Y = 3
-
-plt.style.use('seaborn-whitegrid')
+MAX_AXIS_X = 3
+MAX_AXIS_Y = 2
 
 for vm in vm_configs:
 
+    axis_bar = 0
     fig_bar, ax_bar = plt.subplots(len(cores))
     fig_bar.canvas.manager.set_window_title("AVG Throughput - " + vm)
-    axis_bar = 0
+    fig_bar.set_size_inches((6, 7))
 
     for core_idx, core in enumerate(cores):
 
@@ -25,6 +28,8 @@ for vm in vm_configs:
         axis_y = 0
         figure, axis = plt.subplots(MAX_AXIS_X, MAX_AXIS_Y)
         figure.canvas.manager.set_window_title(cores_name[core_idx] + ' - ' + vm)
+
+        figure.set_size_inches((6, 6))
 
         throughput_sum = np.zeros((max(execs), len(execs)))
 
@@ -79,7 +84,8 @@ for vm in vm_configs:
         bottom_bar = np.zeros(len(execs))
         ax_bar[axis_bar].set_title(cores_name[core_idx])
         for i in range(0, max(execs)):
-            ax_bar[axis_bar].bar(list(map(str,execs)), throughput_sum[i], bottom=bottom_bar, label="UE #" + str(i + 1))
+            ax_bar[axis_bar].bar(list(map(str,execs)), throughput_sum[i], bottom=bottom_bar)
+            ax_bar[axis_bar].set_title(cores_name[core_idx], fontsize=12)
             bottom_bar += np.array(throughput_sum[i])
 
         for i in range(0, len(execs)):
@@ -88,19 +94,18 @@ for vm in vm_configs:
 
         axis_bar += 1
 
-        figure.text(.5, 0.96, cores_name[core_idx], ha='center', fontsize=15)
-        figure.text(0.5, 0.04, "Tempo do experimento (s)", ha='center', fontsize=12)
+        figure.text(.5, 0.96, cores_name[core_idx], ha='center', fontsize=12)
+        figure.text(0.5, 0.01, "Tempo do experimento (s)", ha='center', fontsize=12)
         figure.text(0.04, 0.5, "Largura de banda (Mbps)", va='center', rotation='vertical', fontsize=12)
-        figure.tight_layout(rect=[0.08, 0.08, 0.95, 0.95])
+        figure.tight_layout(rect=[0.12, 0.08, 0.95, 0.95])
 
-        plt.subplots_adjust(left=0.08, bottom=0.09, right=0.95, top=0.91, wspace=0.15, hspace=0.25)
-        plt.show(block=False)
+        plt.subplots_adjust(left=0.12, bottom=0.09, right=0.95, top=0.91, wspace=0.2, hspace=0.3)
 
 
     fig_bar.text(0.5, 0.04, "Número de UEs", ha='center', fontsize=12)
     fig_bar.text(0.04, 0.5, "Largura de banda (Mbps)", va='center', rotation='vertical', fontsize=12)
     fig_bar.tight_layout(rect=[0.05, 0.05, 0.95, 0.95])
-
     # break
 
+plt.show(block=False)
 input("Press Enter to continue...")
