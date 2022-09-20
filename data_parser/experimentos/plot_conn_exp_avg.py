@@ -101,7 +101,7 @@ for vm in vm_configs:
                     curr_ax.plot(timestamp, dataplane_avg_arr, color=color)
 
             # Plot the global average
-            print ("Core {}: {}ms - Global: {:.2f}ms - Max: {:.2f}ms - Median: {:.2f}ms".format(cores_name[core_idx], exe, statistics.mean(all_data), max(all_data), statistics.median(all_data)))
+            print ("Core {}: {} ms - Max: {:.2f} ms - Mean: {:.2f} ms - Median: {:.2f} ms - Pstdev: {:.2f} ms".format(cores_name[core_idx], exe, max(all_data), statistics.mean(all_data), statistics.median(all_data), statistics.pstdev(all_data)))
 
             curr_ax.set_title(str(exe) + " ms", fontsize=10)
             axis_x += 1
