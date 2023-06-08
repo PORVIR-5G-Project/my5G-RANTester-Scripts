@@ -4,7 +4,7 @@ Scripts to run my5G-RANTester
 
 ## How to run
 
-1. Install Linux Kernel **v5.4.90** following [this tutorial](https://www.how2shout.com/linux/how-to-change-default-kernel-in-ubuntu-22-04-20-04-lts/).
+1. On Ubuntu Server **20.04 LTS**, install Linux Kernel **v5.4.90** following [this tutorial](https://www.how2shout.com/linux/how-to-change-default-kernel-in-ubuntu-22-04-20-04-lts/).
 
 2. Install `curl`:
 
