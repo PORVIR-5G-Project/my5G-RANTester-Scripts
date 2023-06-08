@@ -111,7 +111,7 @@ user_input(){
 ### Clear previous executions before run.
 if $CLEAR || $STOP_CLEAR; then
     print "Cleaning environment from previous executions before run..."
-    bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/stop_and_clear.sh)
+    bash <(curl -s https://raw.githubusercontent.com/PORVIR-5G-Project/my5G-RANTester-Scripts/main/stop_and_clear.sh)
 
     if $STOP_CLEAR; then
         exit 0;
@@ -197,7 +197,7 @@ fi
 ### Create free5GC containers
 print "Creating free5GC containers, it can take a while..."
 
-git clone https://github.com/gabriel-lando/free5gc-compose.git
+git clone https://github.com/PORVIR-5G-Project/free5gc-compose.git
 cd free5gc-compose/
 make base
 docker compose up --build -d
@@ -205,11 +205,11 @@ cd $WORK_DIR
 
 ### Fill free5GC database with IMSI info
 print "Adding necessary information to free5GC database..."
-git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-free5GC-Database-Filler
+git clone --recurse-submodules https://github.com/PORVIR-5G-Project/my5G-RANTester-free5GC-Database-Filler
 
 cd my5G-RANTester-free5GC-Database-Filler/
 
-wget https://raw.githubusercontent.com/gabriel-lando/free5gc-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
+wget https://raw.githubusercontent.com/PORVIR-5G-Project/free5gc-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
 
 # Generate .env file with the configs for docker compose
 echo NUM_DEVICES=$NUM_UEs > .env
@@ -230,13 +230,13 @@ cd $WORK_DIR
 
 ### Create my5G-RANTester container
 print "Creating my5G-RANTester container, it can take a while..."
-git clone https://github.com/gabriel-lando/free5gc-my5G-RANTester-docker
+git clone https://github.com/PORVIR-5G-Project/free5gc-my5G-RANTester-docker
 
 cd free5gc-my5G-RANTester-docker/
 git submodule update --init --remote
 
 # Create config for multiple gNB
-wget https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/generate_compose_multi_gnb.sh -O generate_compose_multi_gnb.sh
+wget https://raw.githubusercontent.com/PORVIR-5G-Project/my5G-RANTester-Scripts/main/utils/generate_compose_multi_gnb.sh -O generate_compose_multi_gnb.sh
 chmod +x generate_compose_multi_gnb.sh
 ./generate_compose_multi_gnb.sh -g $NUM_GNBs -u $NUM_UEs
 

@@ -25,7 +25,7 @@ Scripts to run my5G-RANTester
      ```
 
      ```bash
-     bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/run.sh) -c 2
+     bash <(curl -s https://raw.githubusercontent.com/PORVIR-5G-Project/my5G-RANTester-Scripts/main/run.sh) -c 2
      ```
 
    - Open5GS:
@@ -35,7 +35,7 @@ Scripts to run my5G-RANTester
      ```
 
      ```bash
-     bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/run.sh) -c 3
+     bash <(curl -s https://raw.githubusercontent.com/PORVIR-5G-Project/my5G-RANTester-Scripts/main/run.sh) -c 3
      ```
 
 ## How to capture analytics logs and export to .csv file
@@ -47,7 +47,7 @@ Scripts to run my5G-RANTester
    ```
 
    ```bash
-   bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/capture_and_parse_logs.sh) my5grantester_logs.csv
+   bash <(curl -s https://raw.githubusercontent.com/PORVIR-5G-Project/my5G-RANTester-Scripts/main/capture_and_parse_logs.sh) my5grantester_logs.csv
    ```
 
 ## How to stop containers and clear data
@@ -59,5 +59,5 @@ Scripts to run my5G-RANTester
    ```
 
    ```bash
-   bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/stop_and_clear.sh)
+   bash <(curl -s https://raw.githubusercontent.com/PORVIR-5G-Project/my5G-RANTester-Scripts/main/stop_and_clear.sh)
    ```

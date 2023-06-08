@@ -98,7 +98,7 @@ run_core() {
         # Clone OAI repository
         git clone --branch v1.4.0 https://gitlab.eurecom.fr/oai/cn5g/oai-cn5g-fed.git 
         cd $CORE_DIR
-        wget https://raw.githubusercontent.com/gabriel-lando/oai-my5G-RANTester-docker/main/config/docker-compose-basic-vpp-nrf.yaml -O docker-compose.yaml
+        wget https://raw.githubusercontent.com/PORVIR-5G-Project/oai-my5G-RANTester-docker/main/config/docker-compose-basic-vpp-nrf.yaml -O docker-compose.yaml
     else
         cd $CORE_DIR
     fi
@@ -113,12 +113,12 @@ fill_core_database() {
     # print "Adding necessary information to OpenAirInterface database..."
 
     # if [ ! -d "my5G-RANTester-Database-Filler" ]; then
-    #     git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-Open5GS-Database-Filler my5G-RANTester-Database-Filler
+    #     git clone --recurse-submodules https://github.com/PORVIR-5G-Project/my5G-RANTester-Open5GS-Database-Filler my5G-RANTester-Database-Filler
     # fi
 
     # cd my5G-RANTester-Database-Filler/
 
-    # wget https://raw.githubusercontent.com/gabriel-lando/open5gs-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
+    # wget https://raw.githubusercontent.com/PORVIR-5G-Project/open5gs-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
 
     # # Generate .env file with the configs for docker compose
     # echo NUM_DEVICES=$@ > .env
@@ -129,7 +129,7 @@ fill_core_database() {
 }
 
 download_core_tester() {
-   git clone -b throughput-test https://github.com/gabriel-lando/oai-my5G-RANTester-docker my5G-RANTester
+   git clone https://github.com/PORVIR-5G-Project/oai-my5G-RANTester-docker my5G-RANTester
 }
 
 # Parse CLI parameters
@@ -157,7 +157,7 @@ elif [ "$CORE_TASK" = "H" ]; then
 fi
 
 # Load print methods
-source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/throughput-test/utils/print.sh)
+source <(curl -s https://raw.githubusercontent.com/PORVIR-5G-Project/my5G-RANTester-Scripts/main/utils/print.sh)
 
 if [ "$CORE_TASK" = "I" ]; then
     install_core_deps

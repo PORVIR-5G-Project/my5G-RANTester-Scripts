@@ -27,8 +27,8 @@ done
 
 # Download scripts to parse logs
 echo "Downloading scripts..."
-wget https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Logs-Parser/main/index.js -O parse_tester_logs.js >/dev/null 2>&1
-wget https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Logs-Parser/main/Dockerfile -O Dockerfile >/dev/null 2>&1
+wget https://raw.githubusercontent.com/PORVIR-5G-Project/my5G-RANTester-Logs-Parser/main/index.js -O parse_tester_logs.js >/dev/null 2>&1
+wget https://raw.githubusercontent.com/PORVIR-5G-Project/my5G-RANTester-Logs-Parser/main/Dockerfile -O Dockerfile >/dev/null 2>&1
 
 # Parse logs
 echo "Parsing logs..."
