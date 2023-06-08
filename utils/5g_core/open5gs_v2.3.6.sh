@@ -2,11 +2,11 @@
 
 ### Constants
 CORE_WORK_DIR=$(pwd)
-CORE_DIR="free5gc-compose/"
+CORE_DIR="docker_open5gs/"
 CORE_MULTI_GNB_DIR="my5G-RANTester-Multi-gNodeB/"
 
 ### Default value of CLI parameters
-DEBUG='false'
+#VERBOSE='false'
 CORE_CLEAR='false'
 CORE_TASK='0'
 CORE_NUM_UEs=1000
@@ -14,28 +14,28 @@ CORE_NUM_UEs=1000
 ### Method to show help menu
 show_help() {
     echo ""
-    echo "free5GC helper"
+    echo "Open5GS helper"
     echo ""
     echo "Use: $0 [OPTIONS]"
     echo ""
     echo "Options:"
     echo ""
     echo "  -h      Show this message and exit."
-    echo "  -d      Enable debug mode (show all logs)."
+    echo "  -v      Enable verbose mode (show all logs)."
     echo ""
-    echo "  -i      Check and Install free5GC dependencies."
-    echo "  -r      Build and run free5GC core."
+    echo "  -i      Check and Install Open5GS dependencies."
+    echo "  -r      Build and run Open5GS core."
     echo "  -t      Download core compatible tester."
-    echo "  -f int  Fill free5GC core database. (Defaut: $CORE_NUM_UEs)"
+    echo "  -f int  Fill Open5GS core database. (Defaut: $CORE_NUM_UEs)"
     echo ""
-    echo "  -s      Stop free5GC core."
-    echo "  -c      Stop and clear free5GC core."
+    echo "  -s      Stop Open5GS core."
+    echo "  -c      Stop and clear Open5GS core."
     echo ""
 }
 
-### Method to stop/clear free5GC core
+### Method to stop/clear Open5GS core
 stop_clear_core() {
-    print "Shuting down free5GC Core..."
+    print "Shuting down Open5GS Core..."
 
     if [ -d "$CORE_DIR" ]; then
         cd $CORE_DIR
@@ -44,7 +44,7 @@ stop_clear_core() {
         if ! $CORE_CLEAR ; then
             docker compose down
             cd $CORE_WORK_DIR
-            return;
+            return
         fi
 
         # Stop core containers and clear data
@@ -63,32 +63,45 @@ stop_clear_core() {
 }
 
 install_core_deps() {
-    print "-> Checking free5GC dependencies..."
+    print "-> Checking Open5GS dependencies..."
 
-    # Install gtp5g
-    source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/dependencies/gtp5g.sh)
-    install_gtp5g
+    return
 }
 
 run_core() {
-    ### Create free5GC containers
-    print "Creating free5GC containers, it can take a while..."
+    ### Create Open5GS containers
+    print "Creating Open5GS containers, it can take a while..."
 
-    git clone https://github.com/gabriel-lando/free5gc-compose.git
-    cd free5gc-compose/
-    make base
+    if [ ! -d "docker_open5gs" ]; then
+        git clone https://github.com/my5G/docker_open5gs.git 
+        cd docker_open5gs/base
+        docker build --no-cache --force-rm -t docker_open5gs .
+
+        cd ../mongo
+        docker build --no-cache --force-rm -t docker_mongo .
+
+        cd ..
+    else
+        cd docker_open5gs/
+    fi
+
+    echo -e "\n\n# HOST IP\nDOCKER_HOST_IP=$HOST_IP" >> .env
+
     docker compose up --build -d
     cd $CORE_WORK_DIR
 }
 
 fill_core_database() {
-    ### Fill free5GC database with IMSI info
-    print "Adding necessary information to free5GC database..."
-    git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-free5GC-Database-Filler my5G-RANTester-Database-Filler
+    ### Fill Open5GS database with IMSI info
+    print "Adding necessary information to Open5GS database..."
+
+    if [ ! -d "my5G-RANTester-Database-Filler" ]; then
+        git clone --recurse-submodules https://github.com/PORVIR-5G-Project/my5G-RANTester-Open5GS-Database-Filler my5G-RANTester-Database-Filler
+    fi
 
     cd my5G-RANTester-Database-Filler/
 
-    wget https://raw.githubusercontent.com/gabriel-lando/free5gc-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
+    wget https://raw.githubusercontent.com/PORVIR-5G-Project/open5gs-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
 
     # Generate .env file with the configs for docker compose
     echo NUM_DEVICES=$@ > .env
@@ -99,13 +112,13 @@ fill_core_database() {
 }
 
 download_core_tester() {
-    git clone https://github.com/gabriel-lando/free5gc-my5G-RANTester-docker my5G-RANTester
+   git clone https://github.com/PORVIR-5G-Project/open5gs-my5G-RANTester-docker my5G-RANTester
 }
 
 # Parse CLI parameters
-while getopts ':f:hdirtsc' 'OPTKEY'; do
+while getopts ':f:hvirtsc' 'OPTKEY'; do
     case ${OPTKEY} in
-        d) DEBUG='true' ;;
+        v) VERBOSE='true' ;;
         h) CORE_TASK="H" ;;
         i) CORE_TASK="I" ;;
         r) CORE_TASK="R" ;;
@@ -127,7 +140,7 @@ elif [ "$CORE_TASK" = "H" ]; then
 fi
 
 # Load print methods
-source <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/utils/print.sh)
+source <(curl -s https://raw.githubusercontent.com/PORVIR-5G-Project/my5G-RANTester-Scripts/main/utils/print.sh)
 
 if [ "$CORE_TASK" = "I" ]; then
     install_core_deps

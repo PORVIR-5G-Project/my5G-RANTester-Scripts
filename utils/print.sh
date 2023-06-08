@@ -3,7 +3,7 @@
 #####################################
 
 ### Set Debug mode
-if ! $DEBUG; then
+if ! [ "$VERBOSE" = "true" ]; then
     exec >/dev/null 2>&1
 fi
 
@@ -11,7 +11,7 @@ fi
 COLOR="`tput setaf 6`" # Default color: Cyan
 DEFAULT="`tput sgr0`"
 print(){
-    if $DEBUG; then
+    if [ "$VERBOSE" = "true" ]; then
         echo "${COLOR}$@${DEFAULT}"
     else
         exec >/dev/tty 2>&1
@@ -43,7 +43,7 @@ USER_INPUT=""
 user_input(){
     local COLOR="`tput setaf 3`" # Yellow
 
-    if $DEBUG; then
+    if [ "$VERBOSE" = "true" ]; then
         read -p "${COLOR}$@${DEFAULT}" USER_INPUT
     else
         exec >/dev/tty 2>&1

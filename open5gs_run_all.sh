@@ -113,7 +113,7 @@ user_input(){
 ### Clear previous executions before run.
 if $CLEAR || $STOP_CLEAR; then
     print "Cleaning environment from previous executions before run..."
-    bash <(curl -s https://raw.githubusercontent.com/gabriel-lando/my5G-RANTester-Scripts/main/stop_and_clear.sh)
+    bash <(curl -s https://raw.githubusercontent.com/PORVIR-5G-Project/my5G-RANTester-Scripts/main/stop_and_clear.sh)
 
     if $STOP_CLEAR; then
         exit 0;
@@ -191,11 +191,11 @@ cd $WORK_DIR
 
 ### Fill Open5GS database with IMSI info
 print "Adding necessary information to Open5GS database..."
-git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-Open5GS-Database-Filler
+git clone --recurse-submodules https://github.com/PORVIR-5G-Project/my5G-RANTester-Open5GS-Database-Filler
 
 cd my5G-RANTester-Open5GS-Database-Filler/
 
-wget https://raw.githubusercontent.com/gabriel-lando/open5gs-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
+wget https://raw.githubusercontent.com/PORVIR-5G-Project/open5gs-my5G-RANTester-docker/main/config/tester.yaml -O ./data/config.yaml
 
 # Generate .env file with the configs for docker compose
 echo NUM_DEVICES=$NUM_UEs > .env
@@ -216,7 +216,7 @@ cd $WORK_DIR
 
 ### Create my5G-RANTester container
 print "Creating my5G-RANTester container, it can take a while..."
-git clone https://github.com/gabriel-lando/open5gs-my5G-RANTester-docker
+git clone https://github.com/PORVIR-5G-Project/open5gs-my5G-RANTester-docker
 
 cd open5gs-my5G-RANTester-docker/
 git submodule init

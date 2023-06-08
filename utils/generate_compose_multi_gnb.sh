@@ -43,7 +43,7 @@ while getopts ':g:i:o:p:s:u:h' 'OPTKEY'; do
 done
 
 # Clone repository with the script
-git clone --recurse-submodules https://github.com/gabriel-lando/my5G-RANTester-Multi-gNodeB
+git clone --recurse-submodules https://github.com/PORVIR-5G-Project/my5G-RANTester-Multi-gNodeB
 cd my5G-RANTester-Multi-gNodeB/
 
 # Create output compose file
